@@ -1,0 +1,125 @@
+% ==============================================================================
+% TEMPLATE ACUAN MATA KULIAH: PPG (PEMROGRAMAN PERMAINAN / GAME)
+% ==============================================================================
+% Dokumen ini disusun persis sesuai format berkas referensi asli PPG (tanpa preamble).
+% Bab utama langsung diawali dari \chapter{Dokumentasi Praktikum}.
+%
+% ATURAN MUTLAK FORMAT PPG:
+% 1. Laporan PPG TIDAK MEMILIKI bab Dasar Teori dan TIDAK MEMILIKI bab Kesimpulan.
+% 2. Bab utama adalah \chapter{Dokumentasi Praktikum} (bukan Hasil dan Pembahasan).
+% 3. Wajib memisahkan \section{Hasil Praktikum} dan \section{Hasil Akhir} dengan \clearpage.
+% 4. Tata letak gambar SATU GAYA TUNGGAL:
+%    - \begin{figure}[H] lebar selalu 0.6\textwidth (atau 0.4\textwidth untuk panel sidebar)
+%    - Tepat di bawahnya: 'Keterangan Gambar :'
+%    - Diikuti \begin{itemize} (Pola 1 deskriptif atau Pola 2 Cara+Fungsi).
+% ==============================================================================
+
+\chapter{Dokumentasi Praktikum}
+\label{chap:dokumentasipraktikum}
+
+% ==============================================================================
+% 1. SEKSI HASIL PRAKTIKUM (PROSES DAN LANGKAH KERJA)
+% ==============================================================================
+\section{Hasil Praktikum}
+\label{sec:hasilpraktikum}
+
+\subsection{Inisialisasi Lingkungan dan Pembuatan Proyek Game Engine}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{1.png}
+    \caption{Pembuatan Proyek Baru Menggunakan Template pada Game Engine}
+    \label{fig:1}
+\end{figure}
+Keterangan Gambar :
+\begin{itemize}
+    \item Buka aplikasi editor game engine dan pilih kategori template proyek yang sesuai (\textit{Third Person} atau \textit{First Person}).
+    \item Tentukan direktori penyimpanan lokal, beri nama proyek sesuai format penamaan modul, lalu klik tombol pembuatan proyek.
+\end{itemize}
+
+\subsection{Eksplorasi Antarmuka Editor dan Hierarki Objek}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{2.png}
+    \caption{Panel Navigasi Objek dan Properti pada Editor Game Engine}
+    \label{fig:2}
+\end{figure}
+Penjelasan Antarmuka :
+\begin{itemize}
+    \item Gunakan panel \textbf{Viewport} utama untuk menavigasikan kamera dan menata objek 3D di dalam level lingkungan permainan.
+    \item Tinjau panel hierarki (\textbf{Outliner}) untuk memilih aktor dan panel \textbf{Details} untuk mengubah atribut parameter fisik.
+\end{itemize}
+
+\subsection{Implementasi Logika Visual Scripting (Blueprint)}
+
+% Contoh Pola 2: Terstruktur Cara + Fungsi
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{3.png}
+    \caption{Penyusunan Rangkaian Node Logika Interaksi Karakter}
+    \label{fig:3}
+\end{figure}
+Penjelasan :
+\begin{itemize}
+    \item \textbf{Cara:} Klik kanan pada kanvas graf logika visual (\textit{Event Graph}), panggil fungsi eksekusi yang ditargetkan, lalu hubungkan pin eksekusi (\textit{white execution line}) ke variabel tujuan.
+    \item \textbf{Fungsi:} Berfungsi untuk memvalidasi pemicu interaksi (\textit{trigger collision}) saat karakter menyentuh area objek dalam permainan.
+\end{itemize}
+
+% ==============================================================================
+% 2. SEKSI HASIL AKHIR (VERIFIKASI FUNGSIONAL GAMEPLAY)
+% Wajib diawali \clearpage
+% ==============================================================================
+\clearpage
+\section{Hasil Akhir}
+\label{sec:hasilakhir}
+
+Bagian ini memaparkan hasil verifikasi fungsional gameplay, animasi, maupun modifikasi perbaikan fitur yang telah diimplementasikan pada sesi praktikum mandiri.
+
+\subsection{Pengujian Mekanika Fisika dan Navigasi Level}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{4.png}
+    \caption{Uji Coba Fungsionalitas Navigasi Karakter di Area Tanjakan dan Rintangan}
+    \label{fig:4}
+\end{figure}
+Keterangan Gambar :
+\begin{itemize}
+    \item Karakter pemain dapat bergerak secara stabil melintasi rintangan tanpa terjadi galat tabrakan objek (\textit{collision clipping}).
+    \item Sistem kamera pemain mengikuti perpindahan arah karakter secara halus dan konsisten terhadap orientasi kontrol gerakan.
+\end{itemize}
+
+\subsection{Verifikasi Siklus Kondisi Karakter dan Interaksi Lingkungan}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{5.png}
+    \caption{Kondisi Respon Status Karakter Saat Memasuki Zona Target}
+    \label{fig:5}
+\end{figure}
+Penjelasan :
+\begin{itemize}
+    \item \textbf{Deskripsi:} Pengujian respon sistem saat karakter menyentuh zona akhir penugasan.
+    \item \textbf{Keterangan:} Indikator grafis dan efek visual terpicu secara simultan, membuktikan bahwa logika algoritma pemicu status telah bekerja 100\% fungsional tanpa menimbulkan \textit{bug} eksekusi.
+\end{itemize}
+
+% ==============================================================================
+% 3. DAFTAR PUSTAKA
+% ==============================================================================
+\chapter{Daftar Pustaka}
+\label{chap:daftarpustaka}
+
+\begin{enumerate}
+    \item \label{modulPPG} Tim Asisten dan Dosen Pengampu. \textit{Modul Praktikum Pemrograman Permainan: [Topik Pertemuan X]}. Yogyakarta: Departemen Teknik Elektro dan Informatika, Sekolah Vokasi, Universitas Gadjah Mada, 2026.
+    
+    \item \label{gregory} J. Gregory. \textit{Game Engine Architecture}, 3rd ed. Boca Raton, FL: CRC Press, 2018.
+    
+    \item \label{romero} M. Romero. \textit{Blueprints Visual Scripting for Unreal Engine 5}, 3rd ed. Birmingham, UK: Packt Publishing, 2022.
+    
+    \item \label{akenine} T. Akenine-Möller, E. Haines, dan N. Hoffman. \textit{Real-Time Rendering}, 4th ed. Boca Raton, FL: A K Peters/CRC Press, 2018.
+    
+    \item \label{engineDoc} Epic Games. \textit{Unreal Engine 5 Documentation}. [Online]. Tersedia: \url{https://docs.unrealengine.com/}.
+    
+    \item \label{sourcecode} [Nama Mahasiswa], \textit{S5-PPG-[NIM] (Source Code Proyek Game Praktikum)}. [Online]. Tersedia: \url{https://github.com/[Username]/[Repo-Game]}.
+\end{enumerate}

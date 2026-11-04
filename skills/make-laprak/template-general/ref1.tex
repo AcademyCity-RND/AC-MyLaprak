@@ -1,0 +1,1431 @@
+\documentclass[a4paper,oneside,11pt]{book}
+
+% Package yang diperlukan
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage[indonesian]{babel}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{mathptmx}   
+\usepackage{helvet}    
+\usepackage{amsfonts}   
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+
+% Untuk manajemen font dan karakter khusus
+\usepackage[T1]{fontenc}       % Encoding font Latin modern
+\usepackage{textcomp}          % Simbol tambahan (text companion)
+
+% Untuk referensi silang yang lebih baik
+\usepackage[all]{hypcap}       % Perbaiki link ke gambar/tabel
+
+% Untuk kontrol paragraf
+\usepackage{parskip}           % Spasi antar paragraf konsisten
+
+% Untuk pengaturan halaman
+\usepackage{fancyhdr}          % Header/footer custom
+\pagestyle{fancy}              % Aktifkan style fancy
+\fancyhf{}                     % Kosongkan header/footer
+\rfoot{\thepage}               % Nomor halaman di kanan bawah
+
+% Untuk gambar yang lebih fleksibel
+\usepackage{adjustbox}         % Penyesuaian ukuran gambar otomatis
+
+% Untuk kode program tambahan
+\usepackage{etoolbox}          % Tools untuk programming LaTeX
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% Pengaturan margin
+\geometry{
+    left=3cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% Pengaturan untuk kode HTML/Python
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{htmlstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+
+\begin{document}
+
+% ================= HALAMAN JUDUL =================
+\begin{titlingpage}
+\begin{center}
+% Spasi atas
+\vspace*{0.5cm}
+
+% Bagian Judul Atas
+{\large \textbf{LAPORAN PRAKTIKUM}} \\[0.3cm]
+{\large \textbf{PRAKTIKUM PENAMBANGAN DATA}} \\[0.3cm]
+{\large \textbf{PERTEMUAN 1}} \\[0.3cm]
+{\large \textbf{NUMPY DAN PANDAS}} \\[2.5cm] % Ubah judul materi sesuai kebutuhan
+
+% Bagian Logo
+% Pastikan file lambangugm.png berada di satu folder dengan file .tex
+\includegraphics[width=6cm]{lambangugm.png} \\[2.5cm]
+
+% Bagian Identitas
+\normalsize
+Disusun oleh:\\[0.5cm]
+\begin{tabular}{@{}l@{\hspace{1cm}}l@{}}
+Nama           & : Hilarius Christiano Avin Paliling \\
+NIM            & : 24/542159/SV/25009 \\
+Kelas          & : PL5B1 \\
+Dosen Pengampu & : Dr.Eng. Ir. Ganjar Alfian, S.T., M.Eng.
+\end{tabular}
+
+% vfill akan secara otomatis mendorong teks di bawahnya ke dasar halaman
+\vfill 
+
+% Bagian Institusi Bawah
+{\large \textbf{PROGRAM STUDI D-IV TEKNOLOGI REKAYASA PERANGKAT LUNAK}} \\[0.1cm]
+{\large \textbf{DEPARTEMEN TEKNIK ELEKTRO DAN INFORMATIKA}} \\[0.1cm]
+{\large \textbf{SEKOLAH VOKASI}} \\[0.1cm]
+{\large \textbf{UNIVERSITAS GADJAH MADA}} \\[0.1cm]
+{\large \textbf{YOGYAKARTA}} \\[0.1cm]
+{\large \textbf{2026}}
+
+% Spasi batas bawah agar tidak menyentuh margin
+\vspace*{0.5cm}
+\end{center}
+\end{titlingpage}
+% =================================================
+
+% Daftar Isi
+\tableofcontents
+\listoffigures
+\newpage
+
+\chapter{Tujuan Praktikum}
+\begin{enumerate}
+    \item Mahasiswa mampu memahami konsep dasar Numpy dan penggunaan array n-dimensi serta berbagai operasi manipulasi array
+    \item Mahasiswa mengetahui berbagai manipulasi dan transformasi data pada pandas, termasuk pembuatan DataFrame
+    \item Mahasiswa dapat menerapkan Numpy dan pandas untuk mengolah dan menganalisis data
+\end{enumerate}
+
+\chapter{Dasar Teori}
+
+% ==========================================
+% GOOGLE COLAB
+% ==========================================
+\section{Google Colaboratory}
+Google Colaboratory, atau yang lebih dikenal dengan sebutan Colab, merupakan lingkungan pengembangan berbasis \textit{cloud} yang menyediakan fasilitas komputasi \textit{Jupyter Notebook} secara gratis. Platform ini dikelola langsung oleh Google Research dan dirancang khusus untuk memfasilitasi kebutuhan edukasi, analisis data, hingga riset kecerdasan buatan [\ref{colab}]. 
+
+Salah satu keunggulan utama dari Colab adalah pengguna tidak perlu melakukan konfigurasi lingkungan lokal atau instalasi \textit{library} secara manual, karena sebagian besar modul standar ilmu data telah terpasang di dalamnya. Selain itu, platform ini menyediakan akses ke unit pemrosesan berkinerja tinggi seperti GPU (\textit{Graphics Processing Unit}) dan TPU (\textit{Tensor Processing Unit}), yang sangat menguntungkan untuk komputasi model \textit{Machine Learning} skala besar [\ref{colab}]. Meskipun demikian, kelemahan Colab terletak pada sifat penyimpanannya yang epemeral (sementara); sesi komputasi akan terputus dan data lokal akan terhapus jika \textit{tab} peramban ditutup atau tidak ada aktivitas dalam rentang waktu tertentu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{101.png}
+    \caption{Antarmuka sistem \textit{cloud} Google Colaboratory (Sumber: [\ref{colab}])}
+    \label{fig:101}
+\end{figure}
+
+% ==========================================
+% NUMPY
+% ==========================================
+\section{NumPy (Numerical Python)}
+NumPy adalah pustaka (\textit{library}) fundamental dalam ekosistem Python yang difokuskan pada komputasi numerik saintifik. Inti dari NumPy adalah objek \texttt{ndarray} (\textit{N-dimensional array}), yakni struktur data matriks yang mampu menampung elemen-elemen berdimensi tinggi dengan tipe data yang seragam (\textit{homogeneous}) [\ref{harris}].
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{102.png}
+    \caption{Ilustrasi arsitektur \textit{N-dimensional array} pada NumPy (Sumber: [\ref{harris}])}
+    \label{fig:102}
+\end{figure}
+
+Kelebihan utama NumPy dibandingkan tipe data \textit{list} bawaan Python adalah alokasi memori yang jauh lebih efisien dan eksekusi komputasi matematis (seperti aljabar linear dan operasi vektor) yang dieksekusi mendekati kecepatan bahasa pemrograman C [\ref{harris}]. Struktur \texttt{ndarray} pada NumPy juga sangat krusial dalam komputasi tensor untuk ekstraksi fitur, serta pengelolaan matriks vektor \textit{embedding} pada arsitektur pemrosesan bahasa alami (\textit{Natural Language Processing}) dan \textit{Retrieval-Augmented Generation} (RAG). Namun, kekurangan pustaka ini adalah ketidakmampuannya dalam menyimpan tipe data campuran di dalam satu array yang sama secara efisien.
+
+% ==========================================
+% PANDAS
+% ==========================================
+\section{Pandas}
+Pandas merupakan pustaka Python yang dirancang secara khusus untuk memfasilitasi proses manipulasi, pembersihan, dan analisis data berstruktur tabular. Pustaka ini memperkenalkan dua struktur data utama: \texttt{Series} (array 1 dimensi berlabel) dan \texttt{DataFrame} (tabel 2 dimensi yang terdiri dari baris dan kolom) [\ref{mckinney}].
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{103.png}
+    \caption{Struktur tabular \texttt{DataFrame} dan \texttt{Series} pada Pandas (Sumber: [\ref{mckinney}])}
+    \label{fig:103}
+\end{figure}
+
+Berbeda dengan NumPy, Pandas mengizinkan penyimpanan tipe data yang heterogen (campuran antara teks, angka, dan \textit{boolean}) dalam satu \texttt{DataFrame}. Fungsi-fungsi utama Pandas meliputi penanganan nilai kosong (\textit{missing values}), penggabungan tabel (\textit{merge}/\textit{join}), transformasi bentuk (\textit{pivot}/\textit{melt}), hingga filtrasi kondisional tingkat lanjut [\ref{mckinney}]. Fleksibilitas inilah yang menjadikan Pandas sebagai alat esensial dalam tahapan \textit{data wrangling}. Kelemahan Pandas terletak pada batas alokasi memori; pustaka ini mengonsumsi memori (RAM) yang cukup masif saat memproses himpunan data (\textit{dataset}) berukuran gigabita karena tidak dioptimalkan untuk komputasi terdistribusi (pemrosesan \textit{multi-core}).
+
+% ==========================================
+% PERBANDINGAN DAN SINERGI
+% ==========================================
+\section{Perbandingan dan Sinergi NumPy dan Pandas}
+Meskipun memiliki tujuan komputasi yang berbeda, NumPy dan Pandas saling melengkapi dalam alur kerja penambangan data (\textit{Data Mining}). NumPy unggul pada kalkulasi matematis mentah dengan data numerik seragam dan berperan sebagai mesin komputasi matriks di latar belakang. Di sisi lain, Pandas beroperasi pada lapisan abstraksi yang lebih tinggi, mempermudah pengguna manusia untuk membaca dan merapikan data yang berantakan menggunakan label kolom dan indeks baris [\ref{mckinney}]. Secara teknis, objek \texttt{DataFrame} pada Pandas dibangun di atas arsitektur \texttt{ndarray} milik NumPy, sehingga kedua pustaka ini memiliki sinergi mutlak.
+
+\chapter{Hasil dan Pembahasan}
+
+% ==========================================
+% HASIL PRAKTIKUM
+% ==========================================
+\section{Hasil Praktikum}
+
+% ------------------------------------------
+% NUMPY
+% ------------------------------------------
+\subsection{NumPy}
+
+\subsubsection{1) Instalasi NumPy}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{1.png}
+    \caption{Source Code Instalasi NumPy}
+    \label{fig:1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{2.png}
+    \caption{Output Instalasi NumPy}
+    \label{fig:2}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Perintah \texttt{!pip install numpy} dijalankan untuk menginstal library NumPy ke dalam environment menggunakan package manager Python.
+    \item \textbf{Output:} Menampilkan pesan \textit{Requirement already satisfied}, yang mengindikasikan bahwa library NumPy versi 2.1.3 sudah terinstal sebelumnya pada sistem.
+\end{itemize}
+
+\subsubsection{2) Import Library NumPy}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{3.png}
+    \caption{Source Code Import Library NumPy}
+    \label{fig:3}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{4.png}
+    \caption{Output Import Library NumPy}
+    \label{fig:4}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Library NumPy diimpor ke dalam program dengan alias \texttt{np} untuk mempermudah pemanggilan fungsi, dilanjutkan dengan mencetak versi library tersebut.
+    \item \textbf{Output:} Menampilkan \texttt{2.1.3}, yang merupakan versi dari library NumPy yang sedang digunakan pada environment saat ini.
+\end{itemize}
+
+\subsubsection{3) Membuat array 1 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{5.png}
+    \caption{Source Code Membuat array 1 dimensi}
+    \label{fig:5}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{6.png}
+    \caption{Output Membuat array 1 dimensi}
+    \label{fig:6}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi \texttt{np.array()} digunakan untuk mengonversi list sekumpulan bilangan bulat \texttt{[1, 2, 3, 4, 5]} menjadi sebuah array 1 dimensi.
+    \item \textbf{Output:} Menampilkan isi array beserta konfirmasi tipe datanya, yaitu \texttt{<class 'numpy.ndarray'>}, yang membuktikan bahwa objek tersebut adalah array khusus milik NumPy.
+\end{itemize}
+
+\subsubsection{4) Melihat shape atau bentuk array}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{7.png}
+    \caption{Source Code Melihat shape atau bentuk array}
+    \label{fig:7}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{8.png}
+    \caption{Output Melihat shape atau bentuk array}
+    \label{fig:8}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Properti \texttt{.shape} dipanggil pada variabel \texttt{arr} untuk mengidentifikasi dimensi dan ukuran dari array tersebut.
+    \item \textbf{Output:} Mengembalikan nilai tuple \texttt{(5,)}, yang menandakan bahwa struktur data tersebut adalah array 1 dimensi yang berisi 5 buah elemen.
+\end{itemize}
+
+\subsubsection{5) Membuat array 2 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{9.png}
+    \caption{Source Code Membuat array 2 dimensi}
+    \label{fig:9}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{10.png}
+    \caption{Output Membuat array 2 dimensi}
+    \label{fig:10}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi \texttt{np.array()} menerima parameter berupa nested list (list di dalam list) untuk menciptakan struktur matriks.
+    \item \textbf{Output:} Menampilkan array 2 dimensi dengan bentuk (shape) \texttt{(2, 3)}, yang berarti matriks tersebut tersusun atas 2 baris dan 3 kolom.
+\end{itemize}
+
+\subsubsection{6) Membuat array 3 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{11.png}
+    \caption{Source Code Membuat array 3 dimensi}
+    \label{fig:11}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{12.png}
+    \caption{Output Membuat array 3 dimensi}
+    \label{fig:12}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Array 3 dimensi diinisialisasi menggunakan list yang bersarang hingga tiga tingkat kedalaman.
+    \item \textbf{Output:} Mencetak struktur tensor 3 dimensi dengan shape \texttt{(3, 2, 4)}, yang merepresentasikan adanya 3 buah matriks, di mana masing-masing matriks berukuran 2 baris dan 4 kolom.
+\end{itemize}
+
+\subsubsection{7) Membuat array dengan String sebagai member}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{13.png}
+    \caption{Source Code Membuat array dengan String sebagai member}
+    \label{fig:13}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{14.png}
+    \caption{Output Membuat array dengan String sebagai member}
+    \label{fig:14}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Inisialisasi array dilakukan dengan memasukkan tipe data teks (string) yang terdiri dari kata 'hello', 'nama', dan 'saya'.
+    \item \textbf{Output:} Array berhasil dibuat dengan tipe data karakter, memiliki shape \texttt{(3,)} yang menunjukkan terdapat 3 elemen string di dalam array 1 dimensi tersebut.
+\end{itemize}
+
+\subsubsection{8) Melakukan indexing di array 1 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{15.png}
+    \caption{Source Code Melakukan indexing di array 1 dimensi}
+    \label{fig:15}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{16.png}
+    \caption{Output Melakukan indexing di array 1 dimensi}
+    \label{fig:16}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Pengaksesan elemen (indexing) pada array 1 dimensi menggunakan format \texttt{arr[index]}. Perlu diingat bahwa indeks NumPy dimulai dari angka 0.
+    \item \textbf{Output:} \texttt{arr[2]} mengembalikan angka 3 (elemen ketiga). Sedangkan \texttt{arr[0]+arr[3]} melakukan operasi aritmatika 1 + 4 yang menghasilkan nilai 5.
+\end{itemize}
+
+\subsubsection{9) Melakukan indexing di array 2 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{17.png}
+    \caption{Source Code Melakukan indexing di array 2 dimensi}
+    \label{fig:17}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{18.png}
+    \caption{Output Melakukan indexing di array 2 dimensi}
+    \label{fig:18}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Indexing pada array 2 dimensi menggunakan format \texttt{arr2d[baris, kolom]}. 
+    \item \textbf{Output:} \texttt{arr2d[0,1]} mengambil data di baris pertama kolom kedua (angka 2). Sementara \texttt{arr2d[1,2]} mengambil data di baris kedua kolom ketiga (angka 6).
+\end{itemize}
+
+\subsubsection{10) Melakukan indexing di array 3 dimensi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{19.png}
+    \caption{Source Code Melakukan indexing di array 3 dimensi}
+    \label{fig:19}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{20.png}
+    \caption{Output Melakukan indexing di array 3 dimensi}
+    \label{fig:20}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Indexing array 3 dimensi menggunakan tiga parameter, yaitu \texttt{arr3d[indeks\_matriks, indeks\_baris, indeks\_kolom]}.
+    \item \textbf{Output:} \texttt{arr3d[0,0,1]} mengakses matriks pertama, baris pertama, kolom kedua (menghasilkan 2). \texttt{arr3d[1,1,2]} mengakses matriks kedua, baris kedua, kolom ketiga (menghasilkan 15).
+\end{itemize}
+
+\subsubsection{11) Membuat array dari contoh}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{21.png}
+    \caption{Source Code Membuat array dari contoh}
+    \label{fig:21}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{22.png}
+    \caption{Output Membuat array dari contoh}
+    \label{fig:22}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Mendemonstrasikan pembuatan array 3 dimensi yang lebih kompleks dengan variasi elemen nol di dalamnya.
+    \item \textbf{Output:} Menghasilkan array dengan shape \texttt{(4, 3, 2)}, yang berarti terdapat 4 blok matriks, di mana tiap blok memiliki 3 baris dan 2 kolom.
+\end{itemize}
+
+\subsubsection{12) Array slicing}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{23.png}
+    \caption{Source Code Array slicing}
+    \label{fig:23}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{24.png}
+    \caption{Output Array slicing}
+    \label{fig:24}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Melakukan teknik \textit{slicing} secara bertingkat: \texttt{[2]} untuk mengambil matriks ketiga, \texttt{[1:]} untuk memotong dari baris kedua hingga akhir, dan \texttt{[0]} untuk mengambil elemen spesifik dari hasil potongan tersebut.
+    \item \textbf{Output:} Proses pemotongan array tersebut secara berurutan berhasil mengekstraksi array 1 dimensi yang berisi nilai \texttt{[3, 0]}.
+\end{itemize}
+
+\subsubsection{13) Mengonversi tipe data}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{25.png}
+    \caption{Source Code Mengonversi tipe data}
+    \label{fig:25}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{26.png}
+    \caption{Output Mengonversi tipe data}
+    \label{fig:26}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Sebuah array bertipe data string dikonversi ke tipe bilangan menggunakan fungsi \texttt{astype(int)} untuk integer dan \texttt{astype(float)} untuk bilangan desimal.
+    \item \textbf{Output:} Memperlihatkan perbedaan format cetakan, di mana tipe integer tercetak sebagai angka bulat biasa \texttt{[1 2 3...]}, sedangkan tipe float tercetak dengan tanda titik desimal \texttt{[1. 2. 3. ...]}.
+\end{itemize}
+
+\subsubsection{14) Reshape ke dimensi lebih tinggi}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{27.png}
+    \caption{Source Code Reshape ke dimensi lebih tinggi}
+    \label{fig:27}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{28.png}
+    \caption{Output Reshape ke dimensi lebih tinggi}
+    \label{fig:28}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi \texttt{reshape()} digunakan untuk mengubah dimensi susunan array tanpa mengubah jumlah elemennya (12 elemen).
+    \item \textbf{Output:} Array awal yang berbentuk 1 dimensi berhasil didistribusikan ulang menjadi matriks 2 dimensi berukuran 3x4, dan juga menjadi tensor 3 dimensi berukuran 3x2x2.
+\end{itemize}
+
+\subsubsection{15) Reshape ke dimensi 1}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{29.png}
+    \caption{Source Code Reshape ke dimensi 1}
+    \label{fig:29}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{30.png}
+    \caption{Output Reshape ke dimensi 1}
+    \label{fig:30}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Pemanggilan fungsi \texttt{reshape(-1)} pada array multi-dimensi berfungsi sebagai perintah \textit{flatten}, yaitu meratakan seluruh struktur array ke dalam satu baris.
+    \item \textbf{Output:} Array yang awalnya berbentuk 3 dimensi diratakan menjadi satu array 1 dimensi yang utuh dan berurutan.
+\end{itemize}
+
+\subsubsection{16) Perbedaan fungsi len dan atribut shape}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{31.png}
+    \caption{Source Code Perbedaan fungsi len dan atribut shape}
+    \label{fig:31}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{32.png}
+    \caption{Output Perbedaan fungsi len dan atribut shape}
+    \label{fig:32}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Membandingkan fungsi bawaan Python \texttt{len()} dengan atribut NumPy \texttt{.shape} pada sebuah array 3 dimensi berukuran (4, 3, 2).
+    \item \textbf{Output:} Fungsi \texttt{len()} hanya mengembalikan panjang dimensi pertama saja (angka 4), sedangkan \texttt{.shape} mengembalikan deskripsi dimensi secara komprehensif ke seluruh tingkatannya.
+\end{itemize}
+
+\subsubsection{17) Iterasi ndarray}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{33.png}
+    \caption{Source Code Iterasi ndarray}
+    \label{fig:33}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{34.png}
+    \caption{Output Iterasi ndarray}
+    \label{fig:34}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Memperagakan dua cara iterasi pada array multi-dimensi. Cara pertama menggunakan perulangan \texttt{for} bertingkat secara langsung, sedangkan cara kedua memanfaatkan perulangan indeks dengan \texttt{range(shape)}.
+    \item \textbf{Output:} Kedua metode iterasi memberikan hasil cetakan deret angka yang identik, namun penggunaan parameter \texttt{shape} dan indeks memberikan kontrol letak elemen yang lebih presisi.
+\end{itemize}
+
+\subsubsection{18) Melakukan join pada array dimensi 1}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{35.png}
+    \caption{Source Code Melakukan join pada array dimensi 1}
+    \label{fig:35}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{36.png}
+    \caption{Output Melakukan join pada array dimensi 1}
+    \label{fig:36}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Penggunaan fungsi \texttt{np.concatenate()} dengan parameter \texttt{axis=0} untuk menggabungkan dua buah array 1 dimensi.
+    \item \textbf{Output:} Array kedua disambungkan tepat di akhir array pertama, membentuk satu array 1 dimensi yang lebih panjang \texttt{[1 2 3 4 5 6]}.
+\end{itemize}
+
+\subsubsection{19) Melakukan join pada array dimensi 2}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{37.png}
+    \caption{Source Code Melakukan join pada array dimensi 2}
+    \label{fig:37}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{38.png}
+    \caption{Output Melakukan join pada array dimensi 2}
+    \label{fig:38}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Menggabungkan dua matriks 2 dimensi menggunakan \texttt{np.concatenate()} dengan parameter \texttt{axis=1}. Parameter ini memerintahkan penggabungan dilakukan secara horizontal (berdasarkan kolom).
+    \item \textbf{Output:} Kedua matriks saling ditempelkan secara menyamping, sehingga jumlah kolom bertambah dari 3 kolom menjadi 6 kolom.
+\end{itemize}
+
+\subsubsection{20) Array Split}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{39.png}
+    \caption{Source Code Array Split}
+    \label{fig:39}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{40.png}
+    \caption{Output Array Split}
+    \label{fig:40}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi \texttt{np.array\_split(arr, 3)} digunakan untuk memecah satu array panjang berisi 12 elemen menjadi 3 bagian yang sama besar.
+    \item \textbf{Output:} Mengembalikan sekumpulan (list) array yang telah terpecah, di mana masing-masing bagian kini berisi tepat 4 elemen.
+\end{itemize}
+
+\subsubsection{21) Array Search}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{41.png}
+    \caption{Source Code Array Search}
+    \label{fig:41}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{42.png}
+    \caption{Output Array Search}
+    \label{fig:42}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi pencarian \texttt{np.where(arr == 3)} digunakan untuk mencari letak posisi (indeks) elemen yang bernilai tepat angka 3 di dalam array.
+    \item \textbf{Output:} Mengembalikan nilai tuple yang berisi \texttt{array([2])}. Ini menandakan bahwa elemen bernilai 3 ditemukan pada indeks ke-2.
+\end{itemize}
+
+\subsubsection{22) Sorting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{43.png}
+    \caption{Source Code Sorting}
+    \label{fig:43}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{44.png}
+    \caption{Output Sorting}
+    \label{fig:44}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Melakukan pengurutan sekumpulan elemen array numerik yang acak menggunakan fungsi \texttt{np.sort()}.
+    \item \textbf{Output:} Menghasilkan array baru yang nilai elemennya telah tersusun rapi secara \textit{ascending} (dari nilai terkecil hingga terbesar).
+\end{itemize}
+
+\subsubsection{23) NumPy Random}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{45.png}
+    \caption{Source Code NumPy Random}
+    \label{fig:45}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{46.png}
+    \caption{Output NumPy Random}
+    \label{fig:46}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Menggunakan sub-library \texttt{random.rand(5)} dari NumPy untuk membangkitkan 5 buah angka acak.
+    \item \textbf{Output:} Menghasilkan array 1 dimensi yang berisi sekumpulan nilai pecahan (float) acak dengan rentang persebaran antara angka 0 hingga 1.
+\end{itemize}
+
+\subsubsection{24) Operasi penjumlahan}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{47.png}
+    \caption{Source Code Operasi penjumlahan}
+    \label{fig:47}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{48.png}
+    \caption{Output Operasi penjumlahan}
+    \label{fig:48}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Operasi penjumlahan antara dua array berbeda menggunakan fungsi \texttt{np.add()}. Syarat operasi ini adalah kedua array harus memiliki bentuk (shape) yang sama.
+    \item \textbf{Output:} Menghasilkan array baru di mana setiap elemen dijumlahkan secara paralel berdasarkan indeksnya masing-masing (contoh: 1+10, 2+20, dan seterusnya).
+\end{itemize}
+
+\subsubsection{25) Operasi Summation (Total jumlah)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{49.png}
+    \caption{Source Code Operasi Summation}
+    \label{fig:49}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{50.png}
+    \caption{Output Operasi Summation}
+    \label{fig:50}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi agregasi \texttt{np.sum()} diterapkan pada sebuah array untuk menghitung akumulasi total seluruh nilai elemen di dalamnya.
+    \item \textbf{Output:} Mengembalikan sebuah skalar bernilai 15, yang merupakan hasil penjumlahan kumulatif dari 1 + 2 + 3 + 4 + 5.
+\end{itemize}
+
+\subsubsection{26) Product of elements}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{51.png}
+    \caption{Source Code Product of elements}
+    \label{fig:51}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{52.png}
+    \caption{Output Product of elements}
+    \label{fig:52}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Fungsi matematis \texttt{np.prod()} diaplikasikan untuk menghitung total nilai perkalian silang antar elemen array.
+    \item \textbf{Output:} Mengembalikan nilai 120, yang merupakan hasil kalkulasi dari perkalian seluruh elemen secara berurutan (1 x 2 x 3 x 4 x 5 = 120).
+\end{itemize}
+
+
+% ------------------------------------------
+% PANDAS
+% ------------------------------------------
+\subsection{Pandas}
+
+\subsubsection{1) Instalasi Pandas}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{53.png}
+    \caption{Source Code Instalasi Pandas}
+    \label{fig:53}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{54.png}
+    \caption{Output Instalasi Pandas}
+    \label{fig:54}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Perintah \texttt{!pip install pandas} dieksekusi melalui terminal/notebook untuk menginstal library Pandas ke dalam environment kerja.
+    \item \textbf{Output:} Sistem merespons dengan proses instalasi atau pesan \textit{Requirement already satisfied} jika Pandas telah terinstal sebelumnya pada direktori sistem.
+\end{itemize}
+
+\subsubsection{2) Import Library Pandas}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{55.png}
+    \caption{Source Code Import Library Pandas}
+    \label{fig:55}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{56.png}
+    \caption{Output Import Library Pandas}
+    \label{fig:56}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Melakukan \textit{import} library pandas dengan nama alias standar yaitu \texttt{pd}, kemudian memanggil atribut \texttt{\_\_version\_\_} untuk melihat versinya.
+    \item \textbf{Output:} Mencetak angka versi dari library Pandas yang berhasil dimuat dan sedang digunakan oleh program.
+\end{itemize}
+
+\subsubsection{3) Membuat Dataframe}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{57.png}
+    \caption{Source Code Membuat Dataframe}
+    \label{fig:57}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{58.png}
+    \caption{Output Membuat Dataframe}
+    \label{fig:58}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{3.1)} Menginisialisasi DataFrame menggunakan \texttt{pd.DataFrame()} dari sebuah \textit{list} 1 dimensi sederhana.
+        \item \textbf{3.2)} Menginisialisasi DataFrame dari \textit{list} 2 dimensi dengan menyematkan nama header (\texttt{columns}) dan nama baris (\texttt{index}).
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{3.1)} Data berhasil diubah menjadi bentuk tabel tabular 1 kolom dengan indeks default (0 sampai 4).
+        \item \textbf{3.2)} Tabel terlihat lebih terstruktur dengan penamaan kolom 'Nama' dan 'Usia' serta indeks baris berupa teks 'satu', 'dua', 'tiga'.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{4) Menambahkan Kolom}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{59.png}
+    \caption{Source Code Menambahkan Kolom}
+    \label{fig:59}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{60.png}
+    \caption{Output Menambahkan Kolom}
+    \label{fig:60}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{4.1)} Menyisipkan kolom baru secara langsung dengan cara mendefinisikan \texttt{df['Alamat']}.
+        \item \textbf{4.2)} Menggunakan fungsi \texttt{df.insert()} untuk menyisipkan kolom 'Alamat' pada indeks kolom ke-2.
+        \item \textbf{4.3)} Menggunakan fungsi \texttt{df.insert()} untuk menyisipkan kolom 'Alamat' pada indeks kolom ke-1 (menggeser kolom 'Usia').
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{4.1)} Kolom 'Alamat' berhasil ditambahkan di sisi paling kanan dari tabel.
+        \item \textbf{4.2)} Kolom 'Alamat' sukses disisipkan sebagai kolom ketiga (setelah 'Nama' dan 'Usia').
+        \item \textbf{4.3)} Kolom 'Alamat' sukses disisipkan tepat di tengah, yaitu di antara kolom 'Nama' dan 'Usia'.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{5) Menambahkan Multi Kolom}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{61.png}
+    \caption{Source Code Menambahkan Multi Kolom}
+    \label{fig:61}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{62.png}
+    \caption{Output Menambahkan Multi Kolom}
+    \label{fig:62}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{5.1)} Menambahkan lebih dari satu kolom ke dalam tabel menggunakan fungsi \texttt{df.assign()}.
+        \item \textbf{5.2)} Menambahkan multi-kolom secara bersamaan dengan inisiasi format berstruktur \textit{dictionary}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{5.1 \& 5.2)} Kedua metode memberikan hasil cetakan yang sama persis, di mana DataFrame sukses menginkorporasikan dua atribut data baru sekaligus (kolom 'Alamat' dan 'Pekerjaan').
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{6) Menghapus Kolom}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{63.png}
+    \caption{Source Code Menghapus Kolom}
+    \label{fig:63}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{64.png}
+    \caption{Output Menghapus Kolom}
+    \label{fig:64}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{6.1)} Melakukan penghapusan kolom menggunakan fungsi \texttt{df.drop()} dengan parameter \texttt{axis=1} dan \texttt{inplace=True}.
+        \item \textbf{6.2)} Menghapus kolom tunggal menggunakan metode \texttt{df.pop()}.
+        \item \textbf{6.3)} Menghapus kolom tunggal menggunakan perintah bawaan Python, yaitu \texttt{del}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{6.1)} Kolom 'Pekerjaan' tidak lagi tampil pada cetakan tabel.
+        \item \textbf{6.2)} Kolom 'Alamat' sukses dihapus sehingga menyisakan tiga kolom lainnya.
+        \item \textbf{6.3)} Kolom 'Alamat' sukses terhapus dari struktur tabel menggunakan eksekusi penghapusan \textit{memory}.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{7) Menghapus Multi Kolom}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{65.png}
+    \caption{Source Code Menghapus Multi Kolom}
+    \label{fig:65}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{66.png}
+    \caption{Output Menghapus Multi Kolom}
+    \label{fig:66}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf Menghapus beberapa kolom secara serentak dengan memasukkan sebuah \textit{list} berisi \texttt{['Alamat', 'Pekerjaan']} ke dalam fungsi \texttt{df.drop()}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf Menghasilkan DataFrame yang menyusut, di mana kolom 'Alamat' dan 'Pekerjaan' terhapus sempurna secara bersamaan, menyisakan atribut 'Nama' dan 'Usia'.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{8) Sorting}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{67.png}
+    \caption{Source Code Sorting}
+    \label{fig:67}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{68.png}
+    \caption{Output Sorting}
+    \label{fig:68}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{8.1)} Memanggil fungsi \texttt{sort\_index()} untuk mengurutkan tata letak DataFrame berdasarkan urutan baris.
+        \item \textbf{8.2)} Memanggil fungsi \texttt{sort\_index()} dengan argumen \texttt{axis=1} untuk mengatur urutan susunan indeks nama kolomnya.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{8.1)} Susunan angka indeks di baris sebelah kiri yang tadinya acak (2, 3, 0, 1) telah terurut dengan rapi (0, 1, 2, 3).
+        \item \textbf{8.2)} Posisi dan urutan kolom pada tabel berubah menjadi tersusun secara alfabetis dari kiri ke kanan (Alamat, Nama, Pekerjaan, Usia).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{9) Sorting Value}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{69.png}
+    \caption{Source Code Sorting Value}
+    \label{fig:69}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{70.png}
+    \caption{Output Sorting Value}
+    \label{fig:70}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{9.1)} Melakukan pengurutan baris berdasarkan nilai isi (value) dari parameter satu kolom, yaitu berdasarkan abjad 'Nama'.
+        \item \textbf{9.2)} Melakukan pengurutan baris secara bertingkat berdasarkan prioritas isi multi-kolom (\texttt{by=['Alamat', 'Nama']}).
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{9.1)} Baris tabel berpindah letak sehingga nama karyawan tersusun dari huruf A hingga R (Adi, Andi, Maya, Ryan).
+        \item \textbf{9.2)} Tabel diurutkan berdasarkan abjad 'Alamat' (Jakarta, Palembang, Surabaya, Yogyakarta) terlebih dahulu, baru kemudian berdasarkan 'Nama'.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{10) Filtering}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{71.png}
+    \caption{Source Code Filtering}
+    \label{fig:71}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{72.png}
+    \caption{Output Filtering}
+    \label{fig:72}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{10.1)} Menerapkan seleksi komparasi matematis satu kondisi (\texttt{Usia > 30}).
+        \item \textbf{10.2)} Menyaring tabel menggunakan gabungan dua kondisi (operator AND \texttt{\&}).
+        \item \textbf{10.3)} Menyaring data berdasarkan ada atau tidaknya kemunculan sebuah list dengan fungsi \texttt{isin()}.
+        \item \textbf{10.4)} Memfilter menggunakan cara penulisan kueri ala SQL dengan perintah \texttt{query()}.
+        \item \textbf{10.5)} Menyeleksi baris data menggunakan referensi label lokasional \texttt{loc}.
+        \item \textbf{10.6)} Melakukan perabaan frasa teks/string parsial melalui \texttt{str.contains()}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{10.1)} Hanya mencetak baris karyawan yang usianya di atas 30 tahun.
+        \item \textbf{10.2)} Hanya meretensi karyawan yang usianya di atas 30 tahun \textit{dan} berprofesi sebagai Mahasiswa.
+        \item \textbf{10.3 \& 10.4)} Sama-sama berhasil menampilkan data yang Namanya secara persis sama dengan 'Adi' atau 'Maya'.
+        \item \textbf{10.5)} Membawa hasil seleksi serupa seperti 10.1.
+        \item \textbf{10.6)} Tabel hanya menyisakan Maya yang profesinya memuat frasa 'PNS'.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{11) Grouping}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{73.png}
+    \caption{Source Code Grouping}
+    \label{fig:73}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{74.png}
+    \caption{Output Grouping}
+    \label{fig:74}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{11.1)} Menjalankan pemisahan tabel berdasar kategori 'Pekerjaan' lalu melihat strukturnya dengan \texttt{.groups}.
+        \item \textbf{11.2)} Melakukan perulangan \texttt{for} bertingkat (iterasi) untuk mencetak satu per satu kelompok beserta anggota datanya.
+        \item \textbf{11.3)} Mengekstrak dan memanggil kelompok secara spesifik menggunakan \texttt{get\_group('Mahasiswa')}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{11.1)} Menghasilkan representasi objek dictionary yang menjabarkan nomor baris indeks yang membentuk setiap grup pekerjaan.
+        \item \textbf{11.2)} Cetakan terminal terbagi ke dalam blok-blok kelompok profesi (Mahasiswa, PNS, Wiraswasta).
+        \item \textbf{11.3)} Tabel secara khusus hanya mencetak data karyawan dari kategori 'Mahasiswa' saja.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{12) Aggregation}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{75.png}
+    \caption{Source Code Aggregation}
+    \label{fig:75}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{76.png}
+    \caption{Output Aggregation}
+    \label{fig:76}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{12.1)} Menerapkan kalkulasi rerata agregat menggunakan \texttt{mean(numeric\_only=True)} pasca-pengelompokan.
+        \item \textbf{12.2)} Memanggil fungsi agregasi komplit \texttt{agg()} yang dipadukan dengan modul matematis dari NumPy (mean, sum, std) ke banyak kolom numerik.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{12.1)} Tabel mengelompok berdasarkan profesi dan menyajikan perhitungan rata-rata usia serta rata-rata gaji.
+        \item \textbf{12.2)} Menghadirkan tabel rekapitulasi multi-dimensi (hirarki kolom), di mana tiap profesi dijabarkan rata-ratanya, total penjumlahannya, serta nilai standar deviasinya untuk usia maupun gaji.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{13) Merge}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{77.png}
+    \caption{Source Code Merge}
+    \label{fig:77}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{78.png}
+    \caption{Output Merge}
+    \label{fig:78}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{13.1)} Mengawinkan dua buah DataFrame (kiri dan kanan) secara relasional berdasarkan kunci relasi yang sama pada parameter \texttt{on='id'}.
+        \item \textbf{13.2)} Melakukan penggabungan dengan menambahkan ketentuan parameter \texttt{how='left'}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{13.1)} Menghasilkan tabel irisan \textit{Inner Join}, di mana hanya data dengan nilai `id` yang muncul di kedua tabel (id 1, 2, 3) yang tergabung.
+        \item \textbf{13.2)} Menghasilkan tabel gabungan \textit{Left Join}, yang memastikan tabel relasi sisi kiri (Data Karyawan) tampil secara utuh tanpa ada yang terpotong meskipun tidak memiliki data padanan Pekerjaan.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{14) Join}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{79.png}
+    \caption{Source Code Join}
+    \label{fig:79}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{80.png}
+    \caption{Output Join}
+    \label{fig:80}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{14.1)} Menerapkan penggabungan \texttt{merge()} \textit{Left Join} dengan menyematkan argumen pembantu berupa \texttt{suffixes}.
+        \item \textbf{14.2)} Memperagakan fungsi \texttt{join()} sebagai varian alternatif penggabungan yang menyatukan data berdasar penyesuaian kecocokan baris indeks.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{14.1 \& 14.2)} Pada kolom yang nama labelnya duplikat antar dua tabel, akan otomatis disematkan akhiran pengenal (misalnya \texttt{\_pekerjaan}) agar tidak terjadi konflik nama kolom, sehingga relasi berhasil dicetak berdampingan.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{15) Concatenate}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{81.png}
+    \caption{Source Code Concatenate}
+    \label{fig:81}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{82.png}
+    \caption{Output Concatenate}
+    \label{fig:82}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{15.1)} Fungsi \texttt{pd.concat()} dijalankan dengan parameter \texttt{axis=0} (penggabungan baris) dan pengabaian label indeks turunan (\texttt{ignore\_index}).
+        \item \textbf{15.2)} Memfungsikan penggabungan dengan menambahkan ikatan tipe relasi luaran (\texttt{join='outer'}).
+        \item \textbf{15.3)} Melakukan penggabungan menyamping berdasarkan kolom dengan mendeklarasikan argumen \texttt{axis=1}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{15.1 \& 15.2)} Kedua tabel direkatkan layaknya gerbong kereta memanjang ke bawah (vertikal), karena jumlah dan format kolomnya sama.
+        \item \textbf{15.3)} Tabel direkatkan secara melebar (horizontal), menyebabkan kemunculan duplikasi pada nama kolom karena dipaksa ditempelkan di sebelah kanan.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{16) Reset Indeks}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{83.png}
+    \caption{Source Code Reset Indeks}
+    \label{fig:83}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{84.png}
+    \caption{Output Reset Indeks}
+    \label{fig:84}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{16.1)} Mempergunakan perintah \texttt{reset\_index(drop=True)} pada sebuah DataFrame hasil gabungan tabel sebelumnya.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{16.1)} Susunan indeks di posisi terluar kiri yang tadinya memiliki duplikasi, telah terhapus sempurna dan diganti dengan angka indeks default sekuensial yang berurut dari 0 sampai dengan 5.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{17) Set Indeks}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{85.png}
+    \caption{Source Code Set Indeks}
+    \label{fig:85}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{86.png}
+    \caption{Output Set Indeks}
+    \label{fig:86}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{17.1)} Memanggil fungsi \texttt{set\_index('id', inplace=True)} untuk mendefinisikan agar kolom spesifik ('id') mengemban peran sebagai identitas penanda indeks primer.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{17.1)} Kolom penomoran urut menghilang, dan atribut 'id' tergeser ke pojok paling kiri menggantikan baris indeks. Ini memungkinkan pemanggilan pemotongan baris via fungsi \texttt{loc} menggunakan nilai angka integer dari kolom id tersebut.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{18) Pivot Tabel}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{87.png}
+    \caption{Source Code Pivot Tabel}
+    \label{fig:87}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{88.png}
+    \caption{Output Pivot Tabel}
+    \label{fig:88}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{18.1)} Mempersiapkan \textit{dictionary} matriks Data Karyawan yang utuh.
+        \item \textbf{18.2)} Mengubah laporan orientasi matriks menggunakan \texttt{pd.pivot\_table()}, mengatur sumbu dimensinya, dan menggunakan fungsi agregasi bawaan pandas (\texttt{'sum'} dan \texttt{'count'}).
+        \item \textbf{18.3)} Menggunakan metode \textit{pivot crosstab} yang sama, namun dengan memanfaatkan operator \texttt{np.sum} dari library eksternal NumPy.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{18.1)} Menampilkan DataFrame awal berjenis long-format.
+        \item \textbf{18.2 \& 18.3)} Tercipta tabel tabulasi silang (crosstab) yang menunjukkan matriks distribusi rekapan total gaji dan jumlah orang, terpetakan menurut kategori Gender (Perempuan/Pria) serta kategori Profesi.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{19) Melt}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{89.png}
+    \caption{Source Code Melt}
+    \label{fig:89}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{90.png}
+    \caption{Output Melt}
+    \label{fig:90}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{19.1)} Membuat susunan DataFrame \textit{wide-format} nilai akademis, di mana setiap mata kuliah memiliki kolom mandiri.
+        \item \textbf{19.2)} Memfungsikan \texttt{pd.melt()} untuk meleburkan kolom-kolom \texttt{value\_vars} tersebut ke bawah secara memanjang (\textit{long-format}).
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{19.1)} Tabel awal mahasiswa yang menyebar horizontal ke kanan.
+        \item \textbf{19.2)} Label mata kuliah tidak lagi menjadi header mandiri, melainkan melebur sebagai teks baris di kolom identitas \texttt{variable}, bersebelahan paralel dengan nilai numeriknya di kolom \texttt{value}.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{20) Lambda Function}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{91.png}
+    \caption{Source Code Lambda Function}
+    \label{fig:91}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{92.png}
+    \caption{Output Lambda Function}
+    \label{fig:92}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{20.1)} Deklarasi \textit{inline} fungsi anonim \texttt{lambda} yang merekam dua input variabel untuk dijumlahkan.
+        \item \textbf{20.2)} Deklarasi fungsi \texttt{lambda} satu parameter untuk operasi perkalian angka 2.
+        \item \textbf{20.3)} Menanamkan fungsi \texttt{lambda} dengan kondisional logika IF bertingkat ke dalam pengait \texttt{apply()} di dalam satu kolom DataFrame.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{20.1)} Hasil eksekusi memori cetak 10 + 12 = 22.
+        \item \textbf{20.2)} Hasil eksekusi angka 5 dikalikan 2 = 10.
+        \item \textbf{20.3)} Pencetakan tabel memperlihatkan pembaruan, di mana tercipta kolom baru ('Grade') yang isinya dievaluasi dinamis dari kolom 'Matematika' dan disematkan langsung (seperti nilai 90 yang terkonversi menjadi 'A').
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{21) Membaca File}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{93.png}
+    \caption{Source Code Membaca File}
+    \label{fig:93}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{94.png}
+    \caption{Output Membaca File}
+    \label{fig:94}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:} Menghubungkan titik direktori ruang simpan antara Google Colaboratory dengan Google Drive menggunakan perintah eksekusi \texttt{drive.mount()}, serta memuat isi berkas menggunakan rute tautan file di \texttt{pd.read\_csv()}.
+    \item \textbf{Output:} Mengembalikan cetakan DataFrame sensor \textit{datatraining} yang merangkum ribuan baris observasi eksternal ke dalam sistem tabel olahan siap analisis di Pandas.
+\end{itemize}
+
+
+% ==========================================
+% TUGAS PRAKTIKUM
+% ==========================================
+\section{Tugas Praktikum}
+
+\subsection{1) Manipulasi Array NumPy 2D}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{95.png}
+    \caption{Source Code Manipulasi Array}
+    \label{fig:95}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{96.png}
+    \caption{Output Manipulasi Array}
+    \label{fig:96}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{1.1)} Menginisialisasi array berukuran 4x4 dengan sebaran angka acak dari rentang 0 hingga 50 menggunakan \texttt{np.random.randint()}.
+        \item \textbf{1.2)} Melakukan transformasi dimensi matriks tersebut menjadi berukuran 2x8 menggunakan fungsi \texttt{reshape(2, 8)}.
+        \item \textbf{1.3)} Mengaplikasikan \textit{boolean indexing} dengan operator komparasi \texttt{> 25} untuk menyeleksi elemen secara spesifik.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{1.1)} Tercetak matriks persegi 4 baris dan 4 kolom yang dipenuhi oleh angka acak hasil \textit{generate}.
+        \item \textbf{1.2)} Tercetak matriks 2 baris dan 8 kolom yang merupakan pendistribusian ulang dari struktur array sebelumnya tanpa kehilangan susunan datanya.
+        \item \textbf{1.3)} Mengembalikan array 1 dimensi baru yang isinya secara mutlak hanya memuat angka-angka di atas nilai 25.
+    \end{itemize}
+\end{itemize}
+
+\subsection{2) GroupBy dan Aggregation pada Data Karyawan}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{97.png}
+    \caption{Source Code Grouping dan Aggregation}
+    \label{fig:97}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{98.png}
+    \caption{Output Grouping dan Aggregation}
+    \label{fig:98}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{2.1)} Membuat DataFrame yang merepresentasikan tabel data karyawan awal dari sebuah \textit{dictionary}.
+        \item \textbf{2.2)} Menjalankan operasi pengelompokan menggunakan \texttt{groupby('Pekerjaan')}, yang kemudian disambung dengan fungsi \texttt{agg()} untuk mencari kalkulasi spesifik nilai maksimum (\texttt{np.max}), minimum (\texttt{np.min}), dan standar deviasi (\texttt{np.std}) pada kolom 'Gaji'.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{2.1)} Ditampilkan tabel karyawan mentah yang belum diklasifikasikan.
+        \item \textbf{2.2)} Menghasilkan tabel analitik komprehensif yang telah diringkas berdasar kategori profesi (Data Analyst, Manager, Programmer), di mana masing-masing profesi merangkum statistik gaji tertinggi, terendah, beserta persebaran deviasinya.
+    \end{itemize}
+\end{itemize}
+
+\subsection{3) Merge Dua DataFrame Karyawan dan Gaji}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{99.png}
+    \caption{Source Code Merge DataFrame dengan Left Join}
+    \label{fig:99}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{100.png}
+    \caption{Output Merge DataFrame dengan Left Join}
+    \label{fig:100}
+\end{figure}
+Penjelasan Kode :
+\begin{itemize}
+    \item \textbf{Input:}
+    \begin{itemize}
+        \item \textbf{3.1)} Menginisialisasi dua DataFrame relasional secara terpisah (Tabel Karyawan dan Tabel Gaji). Kedua tabel sengaja diberi satu nama kolom identik, yaitu 'Lokasi'.
+        \item \textbf{3.2)} Menyatukan kedua tabel tersebut memanfaatkan \texttt{pd.merge()} dengan spesifikasi kunci relasi silang (\texttt{left\_on='Emp\_id'} dan \texttt{right\_on='ID'}), jenis gabungan \texttt{how='left'}, dan penyemat identitas kolom ganda \texttt{suffixes=('\_Karyawan', '\_Gaji')}.
+    \end{itemize}
+    \item \textbf{Output:}
+    \begin{itemize}
+        \item \textbf{3.1)} Mencetak struktur dari dua buah tabel independen di awal.
+        \item \textbf{3.2)} Terbentuk satu tabel integrasi yang sempurna. Berkat operasi \textit{Left Join}, seluruh daftar karyawan dipertahankan (meskipun Dewi dengan ID E04 tidak memiliki kecocokan data gaji sehingga tertulis NaN). Penamaan kolom 'Lokasi' pun secara otomatis terdiferensiasi untuk menghindari ambiguitas operasional.
+    \end{itemize}
+\end{itemize}
+
+\chapter{Kesimpulan}
+\label{chap:kesimpulan}
+
+Berdasarkan praktikum mengenai implementasi \textit{library} NumPy dan Pandas yang telah dilakukan, dapat disimpulkan beberapa poin utama sebagai berikut:
+
+\begin{itemize}
+    \item Praktikum ini berhasil mendemonstrasikan efisiensi penggunaan NumPy untuk komputasi numerik dan manipulasi matriks multidimensi. Melalui operasi fundamental seperti \textit{slicing}, \textit{reshaping}, dan komputasi matematis, proses pengelolaan \textit{array} dapat dieksekusi secara cepat dan terstruktur.
+    
+    \item Implementasi struktur tabular menggunakan \texttt{DataFrame} pada Pandas membuktikan keunggulannya dalam tahapan prapemrosesan data (\textit{data wrangling}). Praktik modifikasi atribut, penyaringan data (\textit{filtering}) berbasis multi-kondisi, hingga pengurutan (\textit{sorting}), secara efektif memudahkan transformasi data mentah menjadi format yang lebih bersih.
+    
+    \item Penggunaan fungsionalitas relasional seperti \textit{merge}, \textit{join}, dan \textit{concatenate} terbukti sangat krusial dalam mengintegrasikan fragmen data dari berbagai sumber terpisah menjadi satu kesatuan yang utuh. Lebih lanjut, kemampuan \textit{grouping} dan agregasi mempermudah kalkulasi statistik secara terpusat pada kategori data yang spesifik.
+    
+    \item Eksplorasi fitur tingkat lanjut seperti \textit{Pivot Table}, \textit{Melt}, dan fungsi \textit{Lambda}, dipadukan dengan integrasi pembacaan berkas dataset eksternal dari Google Drive via ekosistem Colab, memvalidasi keberhasilan penerapan alur kerja penambangan data (\textit{Data Mining}) secara praktis.
+\end{itemize}
+
+Secara keseluruhan, penguasaan ekosistem NumPy dan Pandas memungkinkan saya untuk mengelola, menganalisis, serta merekonstruksi himpunan data (\textit{dataset}) yang kompleks menjadi sajian informasi yang terstruktur, efisien, dan siap diproses ke tahapan komputasi tingkat lanjut.
+
+\chapter{Daftar Pustaka}
+
+\begin{enumerate}
+    \item \label{modulPraktikum} Dr. Eng. Ir. Ganjar Alfian, S.T., M. Eng., dan Tim Asisten. \textit{Modul Praktikum Penambangan Data 2026}. Sekolah Vokasi Universitas Gadjah Mada: Yogyakarta, 2026.
+    
+    \item \label{mckinney} W. McKinney. \textit{Python for Data Analysis: Data Wrangling with Pandas, NumPy, and IPython}, 3rd ed. Sebastopol, CA: O'Reilly Media, 2022.
+    
+    \item \label{harris} C. R. Harris \textit{et al.} "Array programming with NumPy," \textit{Nature}, vol. 585, no. 7825, pp. 357-362, Sep. 2020.
+    
+    \item \label{colab} Google. \textit{Google Colaboratory Frequently Asked Questions}. [Online]. Tersedia: \url{https://research.google.com/colaboratory/faq.html}.
+    
+    \item \label{sourceCode} H. C. A. Paliling. \textit{S5-PPD-542159 (Source Code Praktikum)}. [Online]. Tersedia: \url{https://colab.research.google.com/drive/1bvBJJTwzyzKHsH95cHhvi076hqc8DzNy?usp=sharing}.
+\end{enumerate}
+\end{document}
