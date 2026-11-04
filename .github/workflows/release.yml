@@ -1,0 +1,39 @@
+name: Automated Release & Distribution Bundle
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build Bundle and Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Release Distribution Bundle (.zip)
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          BUNDLE_NAME="MyLaprak-${VERSION}.zip"
+          echo "Packaging distribution bundle: ${BUNDLE_NAME}"
+          
+          # Buat file zip berisi bundle siap pakai untuk Antigravity plugin
+          zip -r "${BUNDLE_NAME}" skills/ plugin.json README.md CONTRIBUTING.md -x "*.git*"
+
+      - name: Publish GitHub Release with Auto-Changelog
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "MyLaprak Release ${{ github.ref_name }}"
+          files: "MyLaprak-${{ github.ref_name }}.zip"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
