@@ -1,0 +1,173 @@
+% ==============================================================================
+% TEMPLATE ACUAN MATA KULIAH: KEPL (KONSTRUKSI DAN EVOLUSI PERANGKAT LUNAK)
+% ==============================================================================
+% Dokumen ini disusun persis sesuai format berkas referensi asli KEPL (tanpa preamble).
+% Bab utama langsung diawali dari \chapter{Dasar Teori}.
+%
+% CIRI KHAS UTAMA FORMAT KEPL:
+% 1. Gaya C (Standar Utama): Penjelasan naratif teknis (CLI, flag, analisis log)
+%    ditulis SEBELUM blok \begin{figure}[H], bukan setelahnya.
+% 2. Gaya B: Gambar berpasangan yang saling membuktikan dipisah \vspace{0.5cm}.
+% 3. Sub-bab khusus Troubleshooting untuk menganalisis galat konfigurasi/linter.
+% 4. Dasar Teori wajib memuat diagram arsitektur sistem (lebar 0.65\textwidth).
+% ==============================================================================
+
+\chapter{Dasar Teori}
+\label{chap:dasarteori}
+
+\section{Konsep Arsitektur dan Optimasi [Nama Topik Rekayasa]}
+
+\subsection{Paradigma [Konsep Utama, misal: Multi-Stage Build]}
+Pada implementasi konvensional, seluruh perkakas pembangun (\textit{build tools}), manajer paket, dependensi pengembangan, serta kode sumber berada dalam satu lingkungan yang sama. Pendekatan ini menghasilkan ukuran artefak yang besar serta memperluas bidang serangan (\textit{attack surface}) [\ref{bukuTeknik}].
+
+Untuk mengatasi keterbatasan tersebut, diperkenalkan paradigma pemisahan lingkungan bertahap [\ref{dokumentasiResmi}]. Pengembang dapat membagi alur kerja ke dalam beberapa tahapan (\textit{stage}) mandiri:
+\begin{itemize}
+    \item \textbf{Tahap Pembangun (\textit{Builder Stage}):} Dikonfigurasi dengan lingkungan lengkap yang memuat perkakas kompilasi berat untuk memproses dependensi dan memvalidasi kode sumber.
+    \item \textbf{Tahap Produksi (\textit{Runtime Stage}):} Menggunakan fondasi minimalis yang hanya menyalin artefak siap pakai dari tahap pembangun melalui instruksi selektif, tanpa menyertakan perkakas kompilasi asal.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{multistage-architecture.png}
+    \caption{Arsitektur konseptual pemisahan lingkungan pembangun dan lingkungan produksi}
+    \label{fig:arsitektur_konseptual}
+\end{figure}
+
+\subsection{Aspek Keamanan dan Pemantauan Status Kesehatan Sistem}
+Keandalan sistem perangkat lunak modern menuntut penerapan prinsip hak istimewa terendah (\textit{least privilege}) serta pemantauan ketersediaan layanan secara berkesinambungan [\ref{standarKeamanan}].
+
+Proses pemantauan keandalan mandiri (\textit{health monitoring}) mengonfigurasi probe berkala menggunakan parameter teknis:
+\begin{itemize}
+    \item \texttt{--interval}: Jarak waktu antar-pengujian (misalnya setiap 15 detik).
+    \item \texttt{--timeout}: Batas toleransi respons perintah probe (misalnya 3 detik).
+    \item \texttt{--start-period}: Periode inisialisasi awal sistem (misalnya 5 detik).
+    \item \texttt{--retries}: Jumlah toleransi kegagalan berturut-turut sebelum status diubah menjadi \texttt{unhealthy}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.60\textwidth]{container-security.png}
+    \caption{Model isolasi keamanan hak akses pengguna non-root pada runtime aplikasi}
+    \label{fig:isolasi_keamanan}
+\end{figure}
+
+% ==============================================================================
+% BAB HASIL DAN PEMBAHASAN
+% ==============================================================================
+\chapter{Hasil dan Pembahasan}
+\label{chap:hasilpembahasan}
+
+\section{Hasil Praktikum}
+\label{sec:hasilpraktikum}
+
+% ==============================================================================
+% CONTOH GAYA C: NARATIF INDIVIDUAL (STANDAR UTAMA KEPL)
+% Narasi teknis mendalam DITULIS SEBELUM \begin{figure}[H]
+% ==============================================================================
+\subsection{Konfigurasi Tahap Pertama (Builder Stage)}
+Tahap pertama didefinisikan sebagai \textit{stage} pembangun menggunakan citra dasar resmi yang memuat dependensi kompilasi lengkap. Instruksi kerja mengeksekusi pemasangan pustaka pihak ketiga melalui perintah \texttt{composer install --no-dev --optimize-autoloader} guna menghasilkan berkas \textit{autoload} yang efisien dan membuang dependensi pengujian yang tidak relevan di lingkungan operasional.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{1.png}
+    \caption{Konfigurasi tahap pertama (builder) pada berkas spesifikasi lingkungan kompilasi}
+    \label{fig:1}
+\end{figure}
+
+\subsection{Penerapan Prinsip Keamanan Hak Akses Non-Root}
+Untuk memenuhi standar keamanan industri, hak kepemilikan direktori kerja dialihkan kepada pengguna sistem non-\textit{root} (\texttt{USER www-data}). Verifikasi hak akses dilakukan melalui terminal CLI dengan mengeksekusi instruksi pembacaan identitas proses:
+\begin{lstlisting}[language=bash]
+docker exec laravel-api whoami
+\end{lstlisting}
+Keluaran terminal menampilkan konfirmasi bahwa layanan aktif berjalan di bawah identitas \texttt{www-data}, membuktikan bahwa kontainer terisolasi dari wewenang administratif penuh sistem \textit{host}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{2.png}
+    \caption{Eksekusi perintah verifikasi identitas pengguna non-root pada terminal CLI}
+    \label{fig:2}
+\end{figure}
+
+% ==============================================================================
+% CONTOH GAYA B: NARATIF BERPASANGAN (DIPISAH \vspace{0.5cm})
+% Digunakan untuk dua pembuktian yang berkaitan erat
+% ==============================================================================
+\subsection{Validasi Otomatisasi Pipeline CI/CD dan Proteksi Rilis}
+Saat perubahan kode digabungkan ke cabang utama (\textit{main}), alur kerja otomatisasi CI/CD secara otomatis terpicu untuk menjalankan rangkaian pengujian mutu dan penerbitan paket ke repositori artefak publik. Mekanisme \textit{Environment Protection} mewajibkan adanya persetujuan manual (\textit{manual approval}) sebelum rilis diteruskan ke lingkungan produksi.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth]{12.png}
+    \caption{Tampilan ringkasan checks pipeline CI/CD yang berstatus sukses dan menunggu otorisasi}
+    \label{fig:12}
+
+    \vspace{0.5cm}
+
+    \includegraphics[width=0.90\textwidth]{13.png}
+    \caption{Antarmuka modal Review Pending Deployments untuk otorisasi manual rilis produksi}
+    \label{fig:13}
+\end{figure}
+
+% ==============================================================================
+% CONTOH SUBSEKSI TROUBLESHOOTING (KHAS KEPL)
+% ==============================================================================
+\subsection{Troubleshooting dan Penanganan Isu Autentikasi Registri Paket}
+Selama proses otomatisasi penerbitan artefak menuju registri kontainer (GHCR), terjadi kendala otorisasi di mana mesin pelaksana (\textit{runner}) mengembalikan kode kesalahan \texttt{403 Forbidden}. 
+
+Berdasarkan analisis akar masalah teknis, hal tersebut disebabkan oleh izin token bawaan (\texttt{GITHUB\_TOKEN}) yang secara baku hanya memiliki hak baca (\textit{read-only}). Solusi diimplementasikan dengan menambahkan deklarasi hak akses eksplisit pada berkas alur kerja YAML:
+\begin{lstlisting}[language=yaml]
+permissions:
+  contents: read
+  packages: write
+\end{lstlisting}
+Setelah penambahan konfigurasi tersebut diunggah ulang, eksekusi pipeline berhasil mengunggah paket kontainer tanpa kegagalan izin.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{14.png}
+    \caption{Log eksekusi pipeline CI/CD yang berhasil mempublikasikan citra paket setelah penyesuaian izin}
+    \label{fig:14}
+\end{figure}
+
+% ==============================================================================
+% BAB KESIMPULAN
+% ==============================================================================
+\chapter{Kesimpulan}
+\label{chap:kesimpulan}
+
+Berdasarkan praktikum mengenai [Topik Praktikum, misal: Optimasi Citra Kontainer dan Otomatisasi CI/CD] yang telah dilaksanakan, diperoleh beberapa kesimpulan utama sebagai berikut:
+
+\begin{enumerate}
+    \item Penerapan paradigma pemisahan lingkungan pembangun (\textit{builder stage}) dari lingkungan produksi (\textit{runtime stage}) terbukti efektif mengeliminasi perkakas kompilasi berat dari citra distribusi akhir.
+    
+    \item Transisi basis sistem operasi menuju distribusi minimalis berhasil memangkas ukuran artefak citra secara empiris hingga lebih dari \textbf{60\%}, yang secara langsung mempercepat latensi transmisi jaringan dan efisiensi penyimpanan repositori.
+    
+    \item Prinsip keamanan \textit{least privilege} berhasil diimplementasikan melalui penegakan pengguna non-\textit{root}, memperkecil potensi bidang serangan dan risiko eskalasi hak akses sistem.
+    
+    \item Integrasi instruksi pemantauan kesehatan mandiri (\texttt{HEALTHCHECK}) mampu mendeteksi kesiapan fungsional aplikasi secara berkala, menyediakan kapabilitas pemulihan mandiri bagi orkestrator kontainer.
+    
+    \item Alur kerja CI/CD berbasis GitHub Actions berhasil mengotomatisasi pengujian dan penerbitan artefak secara terstandarisasi dengan proteksi otorisasi bertingkat sebelum rilis produksi.
+\end{enumerate}
+
+% ==============================================================================
+% BAB DAFTAR PUSTAKA
+% ==============================================================================
+\chapter{Daftar Pustaka}
+\label{chap:daftarpustaka}
+
+\begin{enumerate}
+    \item \label{bukuTeknik} J. Turnbull. \textit{The Docker Book: Containerization Is the New Virtualization}. James Turnbull, 2014. \mbox{[Online]. Tersedia:} \url{https://www.dockerbook.com/}
+
+    \item \label{dokumentasiResmi} Docker, Inc. \textit{Multi-stage builds: Use multi-stage builds}. Docker Documentation, 2024. \mbox{[Online]. Tersedia:} \url{https://docs.docker.com/build/building/multi-stage/}
+
+    \item \label{standarKeamanan} M. Souppaya, J. Morello, \& K. Scarfone. \textit{Application Container Security Guide}. NIST Special Publication 800-190, National Institute of Standards and Technology, 2017. \mbox{[Online]. Tersedia:} \url{https://doi.org/10.6028/NIST.SP.800-190}
+
+    \item \label{sourcecode} Tautan Repositori Kode Sumber dan Paket Publik:
+    \begin{itemize}
+        \item Repositori Praktikum Matkul KEPL:\\
+        \url{https://github.com/[Organisasi]/[Nama-Repo-Praktikum]}
+
+        \item Paket Registri Kontainer / Artefak Rilis Publik:\\
+        \url{https://github.com/[Organisasi]/[Nama-Repo]/pkgs/container/[Nama-Paket]}
+    \end{itemize}
+\end{enumerate}

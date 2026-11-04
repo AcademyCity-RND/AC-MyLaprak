@@ -1,0 +1,65 @@
+% ==============================================================================
+% TEMPLATE: BAB DASAR TEORI
+% ==============================================================================
+% File ini memuat struktur bab Dasar Teori dengan standar naratif akademis,
+% perumusan matematis (equation), diagram konsep, serta sitasi wajib.
+% Ganti teks placeholder di bawah dengan materi teori riil dari modul/literatur.
+% ==============================================================================
+
+\chapter{Dasar Teori}
+\label{chap:dasarteori}
+
+% ==========================================
+% TOPIK TEORI 1: KONSEP FUNDAMENTAL
+% ==========================================
+\section{Konsep Fundamental [Nama Topik 1]}
+
+[Nama Topik 1] merupakan salah satu konsep mendasar dalam bidang [Bidang Keilmuan, misal: rekayasa perangkat lunak / penambangan data / komputasi awan] yang berfungsi untuk [uraikan fungsi utama dan urgensi konsep tersebut] [\ref{modulPraktikum}]. Pada penerapannya, pendekatan ini memungkinkan sistem untuk memproses, mengelola, atau mentransformasikan data masukan menjadi struktur informasi yang terukur dan efisien [\ref{bukuTeks}].
+
+Keunggulan utama dari [Nama Topik 1] terletak pada fleksibilitas dan optimasi sumber daya yang dimilikinya. Meskipun demikian, terdapat batasan teknis yang perlu diperhatikan, seperti sensitivitas terhadap parameter inisialisasi awal atau kebutuhan konsumsi memori yang proporsional terhadap kompleksitas data yang ditangani [\ref{jurnalIlmiah}].
+
+% ==========================================
+% ILUSTRASI DIAGRAM ARSITEKTUR / KONSEP
+% ==========================================
+\begin{figure}[H]
+    \centering
+    % Pastikan berkas diagram berada pada direktori kerja praktikum
+    \includegraphics[width=0.6\textwidth]{diagram_konsep.png}
+    \caption{Arsitektur dan Alur Kerja [Nama Topik 1] (Sumber: [\ref{modulPraktikum}])}
+    \label{fig:diagram_konsep}
+\end{figure}
+
+% ==========================================
+% TOPIK TEORI 2: METODE / ALGORITMA
+% ==========================================
+\section{Metode dan Formulasi Matematis [Nama Metode 2]}
+
+Metode [Nama Metode 2] digunakan untuk menghitung atau mengevaluasi [jelaskan fungsi formulasi metode]. Secara matematis, keterkaitan antara variabel masukan ($X$) dan estimasi luaran ($y$) dapat dinyatakan melalui persamaan berikut [\ref{jurnalIlmiah}]:
+
+\begin{equation}
+    y = f(X) = \sum_{i=1}^{n} w_i \cdot x_i + b
+    \label{eq:formulasi_dasar}
+\end{equation}
+
+Dimana:
+\begin{itemize}
+    \item $y$ = nilai luaran prediksi / hasil perhitungan
+    \item $x_i$ = variabel masukan atau fitur ke-$i$
+    \item $w_i$ = bobot pengaruh (\textit{weight}) dari masing-masing fitur
+    \item $b$ = nilai bias / \textit{intercept} dasar
+    \item $n$ = total dimensi variabel masukan
+\end{itemize}
+
+% ==========================================
+% TOPIK TEORI 3: METRIK EVALUASI
+% ==========================================
+\section{Metrik Evaluasi [Nama Pengujian / Kinerja]}
+
+Untuk menguji performa dan mengukur reliabilitas hasil praktikum, digunakan indikator evaluasi berbasis galat kesalahan numerik atau tingkat akurasi luaran. Formulasi metrik evaluasi dapat dihitung menggunakan persamaan:
+
+\begin{equation}
+    E = \sqrt{\frac{1}{m}\sum_{j=1}^{m}\left(y_{j} - \hat{y}_{j}\right)^2}
+    \label{eq:metrik_evaluasi}
+\end{equation}
+
+Nilai $E$ yang semakin mendekati angka nol mengindikasikan tingkat deviasi galat yang semakin minim, sehingga luaran sistem dapat dikategorikan memiliki akurasi yang tinggi dan konsisten terhadap data pengujian riil [\ref{jurnalIlmiah}].
