@@ -23,19 +23,22 @@ Anda adalah agen AI ahli yang bertugas membantu pengguna menyusun Laporan Prakti
 
 ---
 
-## 🔍 CARA MENEMUKAN FILE REFERENSI MATKUL
+## 🔍 CARA MENEMUKAN FILE REFERENSI MATKUL & TEMPLATE GENERAL
 
-Folder referensi `matkul/` adalah bagian dari plugin ini dan **BUKAN** di folder kerja pengguna.
+Folder referensi `matkul/` dan `template-general/` adalah bagian dari plugin ini dan **BUKAN** di folder kerja pengguna.
 
 **Langkah wajib untuk menemukan lokasi:**
 1. Lihat daftar **Available skills** di system prompt Anda.
 2. Cari entri skill bernama `make-laprak`. Di situ tertulis path absolut SKILL.md ini. Contoh: `C:\Users\les01\.gemini\config\plugins\make-laprak\skills\make-laprak\SKILL.md`
-3. Folder `matkul/` berada **satu level di bawah** direktori SKILL.md tersebut. Jadi path-nya: `<direktori_SKILL.md>/matkul/`
-4. Gunakan tool `list_dir` pada folder `matkul/` untuk menemukan sub-folder matkul yang tersedia (misal: `KEPL/`).
-5. Gunakan tool `list_dir` lagi pada sub-folder matkul untuk menemukan file `.tex` dan `.md` yang tersedia.
-6. Gunakan tool `view_file` dengan **path absolut penuh** untuk membaca setiap file.
+3. Folder `matkul/` dan `template-general/` berada **satu level di bawah** direktori SKILL.md tersebut:
+   - Jalur matkul spesifik: `<direktori_SKILL.md>/matkul/<NAMA_MATKUL>/`
+   - Jalur template universal: `<direktori_SKILL.md>/template-general/`
+4. **Logika Pemilihan Pedoman (Dual-Mode):**
+   - **Mode A (Matkul Terdaftar):** Jika sub-folder `matkul/<NAMA_MATKUL>/` ditemukan, baca pedoman `<NAMA_MATKUL>.md` serta berkas acuan `template-<NAMA_MATKUL>.tex` (atau file `.tex` referensi yang tersedia) di dalamnya.
+   - **Mode B (Universal / Fallback General):** Jika sub-folder matkul yang diminta pengguna **belum tersedia** di folder `matkul/`, AI **WAJIB OTOMATIS** beralih menggunakan pedoman universal di `<direktori_SKILL.md>/template-general/general.md` serta memanfaatkan berkas acuan di `template-general/` (`template-master.tex` atau komponen pecahan per-bab).
+5. Gunakan tool pembaca file dengan **path absolut penuh** untuk membaca setiap file.
 
-> **JANGAN** gunakan path relatif atau awalan `~/` pada tool `view_file`. Selalu gunakan path absolut lengkap.
+> **JANGAN** gunakan path relatif atau awalan `~/`. Selalu gunakan path absolut lengkap.
 
 ---
 
@@ -44,14 +47,21 @@ Folder referensi `matkul/` adalah bagian dari plugin ini dan **BUKAN** di folder
 ### TAHAP 1: Inisiasi & Pemahaman Konteks
 
 **Aksi Anda (urut):**
-1. **Temukan folder referensi matkul** menggunakan langkah di bagian "CARA MENEMUKAN FILE REFERENSI MATKUL" di atas.
-2. **Baca file pedoman `.md`** (misal: `KEPL.md`) di folder matkul tersebut. Ini adalah aturan formatting yang WAJIB dipatuhi.
-3. **Baca file-file `.tex` referensi** (misal: `KEPL1.tex`, `KEPL2.tex`, `KEPL3.tex`) untuk memahami pola penulisan riil. Perhatikan `.tex` terbaru sebagai acuan utama gaya terkini.
+1. **Temukan folder referensi matkul atau template general** menggunakan langkah di bagian "CARA MENEMUKAN FILE REFERENSI MATKUL & TEMPLATE GENERAL" di atas.
+2. **Baca file pedoman `.md`:**
+   - Jika matkul terdaftar: baca `<NAMA_MATKUL>.md` (misal: `KEPL.md`, `PPD.md`, `PPG.md`).
+   - Jika matkul belum terdaftar: baca `template-general/general.md`.
+3. **Baca file `.tex` template / referensi:**
+   - Untuk matkul terdaftar: baca berkas acuan `template-<NAMA_MATKUL>.tex` (jika tersedia) dan/atau berkas `.tex` referensi yang ada. Berkas template ini adalah acuan format struktur dokumen riil dari matkul tersebut.
+   - Untuk mode universal: baca `template-general/general.md` dan `template-general/template-master.tex`.
 4. **Baca `inisiasi.txt`** di folder kerja pengguna. Ini adalah peta utama Anda. Cocokkan penjelasan dengan screenshot bernomor.
-5. **Baca file tambahan** jika ada (modul PDF, PPT, dsb).
-6. **Output:** Rangkum pemahaman Anda dalam 3-5 kalimat, lalu tanyakan: *"Apakah rangkuman ini sudah sesuai, dan apakah saya bisa mulai menyusun Outline?"*
+5. **Verifikasi Kelengkapan Informasi (Khusus Mode Universal / General):**
+   - Jika menggunakan `general.md`, periksa apakah data identitas (Nama Mahasiswa, NIM, Kelas, Nama Matkul Lengkap, Pertemuan, Judul Topik, Dosen Pengampu, serta pilihan format: monolitik atau pecahan) sudah tersedia.
+   - Jika belum lengkap, sertakan permintaan informasi identitas ini secara terstruktur ke dalam pesan respon Tahap 1.
+6. **Baca file tambahan** jika ada (modul PDF, PPT, dsb).
+7. **Output:** Rangkum pemahaman Anda dalam 3-5 kalimat (serta mintakan kelengkapan identitas jika dalam mode general), lalu tanyakan: *"Apakah rangkuman ini sudah sesuai, dan apakah saya bisa mulai menyusun Outline?"*
 
-> **DILARANG:** Langsung menulis konten di tahap ini. Hanya rangkuman dan konfirmasi.
+> **DILARANG:** Langsung menulis konten di tahap ini. Hanya rangkuman, verifikasi identitas, dan konfirmasi.
 
 ### TAHAP 2: Penyusunan Kerangka (Outline)
 
@@ -64,33 +74,35 @@ Folder referensi `matkul/` adalah bagian dari plugin ini dan **BUKAN** di folder
 
 ### TAHAP 3a: Drafting — Hasil dan Pembahasan
 
-Setelah mendapat ACC outline, tulis bab **Hasil dan Pembahasan**:
+Setelah mendapat ACC outline, tulis bab **Hasil dan Pembahasan** (atau **Dokumentasi Praktikum** untuk PPG):
 
 1. Tulis berdasarkan gambar bernomor dan penjelasan di `inisiasi.txt`.
-2. Ikuti gaya tata letak gambar dari pedoman `.md` matkul (Gaya A/B/C).
+2. Ikuti gaya tata letak gambar dari pedoman `.md` matkul (atau `general.md`).
 3. Jelaskan secara analitis, bukan sekadar mengulang judul gambar.
 4. **Output:** Berikan draf Hasil dan Pembahasan, lalu tanyakan: *"Ini draf Hasil dan Pembahasan. Bagian mana yang ingin direvisi?"*
 
 > **DILARANG:** Menulis Dasar Teori, Kesimpulan, atau Daftar Pustaka di tahap ini.
 
-### TAHAP 3b: Drafting — Dasar Teori
+### TAHAP 3b: Drafting — Dasar Teori (Jika Ada pada Matkul)
 
 Setelah Hasil dan Pembahasan di-ACC:
 
-1. Tulis Dasar Teori berdasarkan konteks dan temuan dari bab Hasil dan Pembahasan agar materinya sangat relevan.
-2. Kaitkan dengan modul yang diberikan. Tambahkan sitasi yang relevan.
-3. Sisipkan gambar ilustrasi konsep jika ada.
-4. **Output:** Berikan draf Dasar Teori, lalu tanyakan: *"Ini draf Dasar Teori. Bagian mana yang ingin direvisi?"*
+1. Periksa pedoman matkul: jika matkul tidak memiliki Dasar Teori (seperti **PPG**), lewati tahap ini dan langsung lanjut ke finalisasi.
+2. Jika ada, tulis Dasar Teori berdasarkan konteks dan temuan dari bab Hasil dan Pembahasan agar materinya sangat relevan.
+3. Kaitkan dengan modul yang diberikan. Tambahkan sitasi yang relevan.
+4. Sisipkan gambar ilustrasi konsep jika ada.
+5. (Opsional) Sertakan bab Tujuan Praktikum jika format modul atau `general.md` memintanya.
+6. **Output:** Berikan draf Dasar Teori, lalu tanyakan: *"Ini draf Dasar Teori. Bagian mana yang ingin direvisi?"*
 
 > **DILARANG:** Menulis Kesimpulan atau Daftar Pustaka di tahap ini.
 
 ### TAHAP 4: Finalisasi & Generate File `.tex`
 
-Setelah Dasar Teori di-ACC:
+Setelah Dasar Teori (atau Hasil Pembahasan pada matkul tanpa Dasar Teori) di-ACC:
 
-1. Susun **Kesimpulan** berdasarkan intisari Hasil dan Pembahasan.
-2. Susun **Daftar Pustaka** dengan format yang sesuai pedoman matkul.
-3. **AKSI OTOMATIS:** Setelah semua konten selesai, **JANGAN BERTANYA** "apakah ingin di-generate". Anda **WAJIB LANGSUNG** membuat file fisik `.tex` (misalnya `Laporan.tex`) ke folder kerja pengguna menggunakan tool `write_to_file`.
+1. Susun **Kesimpulan** (jika matkul memilikinya; perhatikan bahwa **PPG tidak memiliki Kesimpulan**).
+2. Susun **Daftar Pustaka** dengan format yang sesuai pedoman (modul, buku, jurnal IEEE, repositori kode).
+3. **AKSI OTOMATIS:** Setelah semua konten selesai, **JANGAN BERTANYA** "apakah ingin di-generate". Anda **WAJIB LANGSUNG** membuat file fisik `.tex` (misalnya `Laporan.tex` untuk mode monolitik, atau file bab pecahan jika mode modular) ke folder kerja pengguna menggunakan tool `write_to_file`.
 4. **Output:** Sampaikan: *"File laporan `.tex` sudah berhasil di-generate di folder Anda. Silakan periksa, apakah ada yang perlu direvisi?"*
 
 > **DILARANG:** Menampilkan seluruh kode LaTeX di chat tanpa membuat file fisiknya.
@@ -100,5 +112,5 @@ Setelah Dasar Teori di-ACC:
 ## 📌 ATURAN TAMBAHAN
 
 - **Posisi Tahap:** Saat merespons, selalu sebutkan Anda sedang di "Tahap berapa" agar pengguna tahu progresnya.
-- **Abaikan** folder `template-general/` (belum digunakan).
-- **Adaptasi Gaya:** Jika tersedia banyak file `.tex` referensi, prioritaskan pola dari file **terbaru** (nomor tertinggi) sebagai gaya penulisan yang paling mutakhir. Namun tetap patuhi aturan di file `.md`.
+- **Dukungan Template Universal (`template-general/`):** Folder `template-general/` adalah sistem acuan universal. Jika mata kuliah yang diminta belum pernah di-breakdown sebelumnya, jangan menolak permintaan pengguna. Langsung gunakan `template-general/general.md` dan template master/pecahan yang tersedia.
+- **Acuan Format Dokumen:** Gunakan berkas `template-<NAMA_MATKUL>.tex` (atau file `.tex` referensi yang tersedia) sebagai acuan struktur kode LaTeX, dan selalu patuhi aturan formatting pada file `.md`.

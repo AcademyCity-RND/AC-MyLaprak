@@ -1,0 +1,361 @@
+\documentclass[a4paper,oneside,11pt]{book}
+
+% ==============================================================================
+% TEMPLATE MONOLITIK: PRAKTIKUM PENAMBANGAN DATA (PPD)
+% ==============================================================================
+% Dokumen ini memuat format acuan resmi laporan praktikum mata kuliah PPD.
+% Ganti teks di dalam tanda kurung siku [PLACEHOLDER] dengan data riil praktikum.
+% ==============================================================================
+
+% ==========================================
+% 1. DEPENDENCIES DAN PAKET
+% ==========================================
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{indentfirst}
+\usepackage{parskip}
+
+% Paket tabel
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+
+% Bahasa dan font
+\usepackage[indonesian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{mathptmx}   
+\usepackage{helvet}    
+\usepackage{amsmath}
+\usepackage{amsfonts}   
+
+% Header dan Footer custom
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% Pengaturan Margin Standar (3cm Kiri, 2.5cm Kanan, 3cm Atas, 3cm Bawah)
+\geometry{
+    left=3cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% Hyperlink dan Referensi Silang
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% Paket Kode Program (Listings)
+\usepackage{listings}
+\usepackage{etoolbox}
+
+% Definisi Palet Warna Kode Program
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+\lstset{style=codestyle}
+
+\begin{document}
+
+% ==============================================================================
+% 2. HALAMAN JUDUL (COVER)
+% ==============================================================================
+\begin{titlingpage}
+\begin{center}
+\vspace*{0.5cm}
+
+{\large \textbf{LAPORAN PRAKTIKUM}} \\[0.3cm]
+{\large \textbf{PRAKTIKUM PENAMBANGAN DATA}} \\[0.3cm]
+{\large \textbf{PERTEMUAN [NOMOR PERTEMUAN]}} \\[0.3cm]
+{\large \textbf{[JUDUL TOPIK PRAKTIKUM, misal: FORECASTING DERET WAKTU]}} \\[2.5cm]
+
+% Logo UGM (Pastikan file lambangugm.png berada satu folder dengan .tex)
+\includegraphics[width=6cm]{lambangugm.png} \\[2.5cm]
+
+\normalsize
+Disusun oleh:\\[0.5cm]
+\begin{tabular}{@{}l@{\hspace{1cm}}l@{}}
+Nama           & : [Nama Lengkap Mahasiswa] \\
+NIM            & : [NIM Mahasiswa] \\
+Kelas          & : [Kelas, misal: PL5B1] \\
+Dosen Pengampu & : Dr. Eng. Ir. Ganjar Alfian, S.T., M. Eng.
+\end{tabular}
+
+\vfill 
+
+{\large \textbf{PROGRAM STUDI D-IV TEKNOLOGI REKAYASA PERANGKAT LUNAK}} \\[0.1cm]
+{\large \textbf{DEPARTEMEN TEKNIK ELEKTRO DAN INFORMATIKA}} \\[0.1cm]
+{\large \textbf{SEKOLAH VOKASI}} \\[0.1cm]
+{\large \textbf{UNIVERSITAS GADJAH MADA}} \\[0.1cm]
+{\large \textbf{YOGYAKARTA}} \\[0.1cm]
+{\large \textbf{2026}}
+
+\vspace*{0.5cm}
+\end{center}
+\end{titlingpage}
+
+% ==============================================================================
+% 3. DAFTAR ISI & DAFTAR GAMBAR
+% ==============================================================================
+\tableofcontents
+\listoffigures
+\newpage
+
+% ==============================================================================
+% 4. BAB I: DASAR TEORI
+% ==============================================================================
+\chapter{Dasar Teori}
+\label{chap:dasarteori}
+
+% ==========================================
+% SEKSI TEORI 1
+% ==========================================
+\section{Konsep [Paradigma / Metode Utama]}
+\textit{[Nama Konsep, misal: Supervised Learning]} merupakan salah satu paradigma fundamental dalam \textit{data mining} di mana algoritma mempelajari pola hubungan antara variabel prediktor (\textit{features}) dengan variabel sasaran (\textit{target}) berdasarkan himpunan data historis berlabel [\ref{bukuML}]. Dalam alur kerja analisis data riil, pemilihan algoritma harus mempertimbangkan kompromi antara tingkat bias dan variansi (*bias-variance trade-off*) guna meminimalkan terjadinya \textit{overfitting} [\ref{modulPraktikum}].
+
+% ==========================================
+% SEKSI TEORI 2: TRANSFORMASI DATA & EQUATION
+% ==========================================
+\section{Metode Transformasi dan Formulasi Matematis}
+Untuk memproses data sekuensial atau tabular ke dalam format pasangan matriks masukan ($X$) dan vektor luaran ($y$), diterapkan metode penyesuaian dimensi:
+\begin{equation}
+    X_i = [s_i, s_{i+1}, \dots, s_{i+n\_steps\_in-1}], \quad y_i = s_{i+n\_steps\_in+n\_steps\_out-1}
+    \label{eq:transformasi}
+\end{equation}
+
+Pemisahan data latih dan data uji wajib mempertahankan kronologi waktu secara urut (\texttt{shuffle=False}) guna mencegah kebocoran informasi masa depan (\textit{data leakage}). Selain itu, dapat diekstraksi 8 indikator statistik deskriptif lokal:
+\begin{itemize}
+    \item Nilai minimum (\texttt{min}) dan nilai maksimum (\texttt{max}).
+    \item Rentang selisih (\texttt{diff} = $\max - \min$).
+    \item Standar deviasi (\texttt{std}) dan rata-rata aritmatika (\texttt{mean}).
+    \item Nilai tengah (\texttt{median}), kemiringan (\texttt{skewness}), dan keruncingan (\texttt{kurtosis}).
+\end{itemize}
+
+% ==========================================
+% SEKSI TEORI 3: METRIK EVALUASI
+% ==========================================
+\section{Metrik Evaluasi Kinerja Model}
+Kinerja model diuji menggunakan metrik evaluasi kuantitatif untuk mengukur besarnya penyimpangan galat prediksi terhadap nilai riil:
+\begin{enumerate}
+    \item \textbf{Root Mean Squared Error (RMSE):}
+    \begin{equation}
+        RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_{i} - \hat{y}_{i}\right)^2}
+        \label{eq:rmse}
+    \end{equation}
+    RMSE memberikan penalti yang besar pada selisih galat ekstrem sehingga sangat representatif dalam menguji presisi skala data kontinu.
+    
+    \item \textbf{Koefisien Korelasi Pearson ($r$):}
+    \begin{equation}
+        r = \frac{\sum_{i=1}^{n}(y_{i} - \bar{y})(\hat{y}_{i} - \bar{\hat{y}})}{\sqrt{\sum_{i=1}^{n}(y_{i} - \bar{y})^2 \sum_{i=1}^{n}(\hat{y}_{i} - \bar{\hat{y}})^2}}
+        \label{eq:pearson}
+    \end{equation}
+    Mengukur keselarasan arah tren antara kurva nilai aktual ($y$) dan nilai estimasi ($\hat{y}$) dengan rentang $-1 \le r \le 1$.
+\end{enumerate}
+
+% ==============================================================================
+% 5. BAB II: HASIL DAN PEMBAHASAN
+% ==============================================================================
+\chapter{Hasil dan Pembahasan}
+\label{chap:hasilpembahasan}
+
+% ==========================================
+% HASIL PRAKTIKUM (TERBIMBING)
+% ==========================================
+\section{Hasil Praktikum}
+\label{sec:hasilpraktikum}
+
+Pada bagian Hasil Praktikum, dilakukan eksperimen terarah menggunakan dataset panduan modul [Nama Dataset Terbimbing, misal: Bike Sharing Dataset] untuk menguji tahapan pemodelan data secara bertahap.
+
+\subsection{Inisialisasi Lingkungan dan Import Library}
+Tahap awal mencakup pemuatan pustaka dasar manipulasi numerik, visualisasi, dan algoritma pembelajaran mesin.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{1.png}
+    \caption{Source Code Import Library}
+    \label{fig:1}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Mengimpor pustaka dasar (\texttt{numpy}, \texttt{pandas}), pustaka plotting (\texttt{matplotlib.pyplot}), modul model \texttt{sklearn} (\texttt{MLPRegressor}, \texttt{RandomForestRegressor}, dll), serta modul metrik evaluasi.
+    \item \textbf{Output:} Seluruh modul terkompilasi dan siap digunakan dalam lingkungan eksekusi Google Colab tanpa konflik versi.
+\end{itemize}
+
+\subsection{Prapemrosesan Data dan Pembagian Dataset}
+Dataset dimuat, disesuaikan tipe datanya, dan dibagi menjadi subset data latih (80\%) dan data uji (20\%).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{2a.png}
+    \caption{Source Code Prapemrosesan Data}
+    \label{fig:2a}
+    
+    \vspace{0.15cm}
+    
+    \includegraphics[width=0.40\textwidth]{2b.png}
+    \caption{Output Verifikasi Matriks Fitur dan Target}
+    \label{fig:2b}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Pada Gambar \ref{fig:2a}, baris kode memproses variabel target, membentuk matriks prediktor, dan memisahkan data menggunakan parameter \texttt{shuffle=False}.
+    \item \textbf{Output:} Gambar \ref{fig:2b} memvalidasi dimensi matriks hasil transformasi data yang siap dialirkan ke tahap pelatihan model.
+\end{itemize}
+
+\subsection{Visualisasi Hasil Prediksi Model}
+Untuk mengevaluasi performa model secara grafis, kurva prediksi masing-masing algoritma dipetakan bersanding dengan data riil.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.50\textwidth]{8a.png}
+    \caption{Plot Visualisasi Hasil Prediksi Model MLP dan KNN}
+    \label{fig:8a}
+    
+    \vspace{0.2cm}
+    
+    \includegraphics[width=0.50\textwidth]{8b.png}
+    \caption{Plot Visualisasi Hasil Prediksi Model DT dan Random Forest}
+    \label{fig:8b}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Perintah plotting kurva perbandingan nilai riil (\texttt{Real data}) terhadap hasil taksiran model pada data uji.
+    \item \textbf{Output:} Gambar \ref{fig:8a} dan \ref{fig:8b} memperlihatkan bahwa model berbasis ansambel (\textit{Random Forest}) menghasilkan estimasi yang paling konsisten dan mulus mendekati pola fluktuasi data aktual.
+\end{itemize}
+
+\subsection{Evaluasi Performa Model Terbimbing}
+Kinerja kuantitatif model diukur berdasarkan indikator kesalahan RMSE dan tingkat korelasi Pearson.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.60\textwidth]{9.png}
+    \caption{Output Evaluasi Metrik Performa Model Forecasting}
+    \label{fig:9}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Eksekusi perintah cetak nilai metrik evaluasi numerik untuk masing-masing algoritma penantang.
+    \item \textbf{Output:} Menampilkan log performa metrik yang membuktikan keunggulan model ansambel dengan RMSE terendah dan korelasi tertinggi.
+\end{itemize}
+
+% ==========================================
+% TUGAS PRAKTIKUM (MANDIRI)
+% ==========================================
+\clearpage
+\section{Tugas Praktikum}
+\label{sec:tugaspraktikum}
+
+Pada bagian Tugas Praktikum, dilakukan penyelesaian studi kasus mandiri menggunakan dataset baru [Nama Dataset Tugas, misal: Tesla Stock Data from 2010 to 2020].
+
+\subsection{Implementasi Pemodelan Tugas Mandiri}
+Model diuji untuk memproyeksikan target masa depan berdasarkan kombinasi fitur yang telah dioptimalkan.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{T1-1.png}
+    \caption{Source Code Implementasi Pemodelan Tugas Mandiri}
+    \label{fig:t1_1}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Menerapkan pipeline pengolahan data mandiri, ekstraksi parameter statistik, serta pelatihan algoritma regresi.
+    \item \textbf{Output:} Model berhasil mempelajari dinamika data penugasan tanpa mengalami kendala konvergensi.
+\end{itemize}
+
+\subsection{Visualisasi dan Evaluasi Kinerja Tugas Mandiri}
+Kurva proyeksi dianalisis untuk melihat kemampuan generalisasi model terhadap data pasar finansial riil.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.50\textwidth]{T1-8a.png}
+    \caption{Plot Visualisasi Hasil Prediksi Model Tugas Mandiri}
+    \label{fig:t1_8a}
+\end{figure}
+Penjelasan Gambar :
+\begin{itemize}
+    \item \textbf{Input:} Perintah visualisasi perbandingan kurva aktual dan estimasi model pada himpunan data uji penugasan.
+    \item \textbf{Output:} Memperlihatkan bahwa model ensemble mampu beradaptasi terhadap tren lonjakan data secara akurat.
+\end{itemize}
+
+\subsection{Analisis Komparatif Performa Model}
+Berdasarkan eksperimen penugasan mandiri yang telah diselesaikan, diperoleh wawasan analitis penting:
+\begin{enumerate}
+    \item \textbf{Stabilitas Algoritma Ensemble:} Penggunaan \textit{Random Forest} memberikan ketahanan yang superior terhadap derau (*noise*) data dibanding pohon keputusan tunggal.
+    \item \textbf{Pengaruh Rekayasa Fitur Tambahan:} Integrasi fitur multi-variabel terbukti memperkaya informasi prediktor dan mereduksi galat RMSE secara nyata.
+\end{enumerate}
+
+% ==============================================================================
+% 6. BAB III: KESIMPULAN
+% ==============================================================================
+\chapter{Kesimpulan}
+\label{chap:kesimpulan}
+
+Berdasarkan praktikum mengenai [Topik Praktikum, misal: Forecasting Data Deret Waktu] yang telah dilaksanakan—meliputi pemodelan langkah terbimbing pada Hasil Praktikum hingga penyelesaian studi kasus mandiri pada Tugas Praktikum—diperoleh beberapa simpulan penting sebagai berikut:
+
+\begin{enumerate}
+    \item \textbf{Efektivitas Rekayasa Fitur dan Transformasi Data:} Metode penataan jendela data sekuensial dan ekstraksi fitur statistik lokal terbukti sukses mentransformasikan data kontinu menjadi representasi fitur yang terstruktur bagi algoritma pembelajaran mesin.
+    
+    \item \textbf{Keunggulan Komparatif Model Ensemble:} Algoritma berbasis ansambel (\textit{Random Forest}) secara konsisten mencatatkan nilai kesalahan RMSE terendah dan korelasi tren tertinggi dibanding algoritma pembanding.
+    
+    \item \textbf{Kelemahan Model Kaku / Non-Ensemble:} Model pohon keputusan tunggal menunjukkan kerentanan terhadap \textit{overfitting} dan partisi ortogonal yang kaku dalam menangani data fluktuatif.
+    
+    \item \textbf{Dampak Positif Eksplorasi Multi-Variabel:} Pengujian pada studi kasus mandiri membuktikan bahwa penyertaan fitur pelengkap memberikan sinyal informasi yang signifikan dalam menaikkan akurasi estimasi.
+    
+    \item \textbf{Pentingnya Sinergi Metrik Evaluasi Komplementer:} Evaluasi kinerja model wajib menggabungkan metrik magnitudo galat (RMSE) dengan metrik keselarasan arah tren (Korelasi Pearson) untuk memperoleh gambaran keandalan yang utuh.
+\end{enumerate}
+
+% ==============================================================================
+% 7. BAB IV: DAFTAR PUSTAKA
+% ==============================================================================
+\chapter{Daftar Pustaka}
+\label{chap:daftarpustaka}
+
+\begin{enumerate}
+    \item \label{modulPraktikum} Dr. Eng. Ir. Ganjar Alfian, S.T., M. Eng., dan Tim Asisten. \textit{Modul Praktikum Penambangan Data: Pertemuan [X] [Topik]}. Yogyakarta: Departemen Teknik Elektro dan Informatika, Sekolah Vokasi, Universitas Gadjah Mada, 2026.
+    
+    \item \label{bukuML} A. Géron. \textit{Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow}, 3rd ed. Sebastopol, CA: O'Reilly Media, 2022.
+    
+    \item \label{jurnalMetrik} T. Chai and R. R. Draxler, "Root mean square error (RMSE) or mean absolute error (MAE)? Arguments against avoiding RMSE in the literature," \textit{Geoscientific Model Development}, vol. 7, no. 3, pp. 1247--1250, 2014. Tersedia: \url{https://doi.org/10.5194/gmd-7-1247-2014}.
+    
+    \item \label{sumberDataset} [Nama Pembuat Dataset], \textit{[Judul Dataset]}. Kaggle, [Tahun]. [Online]. Tersedia: \url{https://www.kaggle.com/datasets/...}.
+    
+    \item \label{colabLaporan} [Nama Mahasiswa], \textit{S5-PPD-[NIM] (Source Code Laporan Praktikum Pertemuan [X])}. Google Colaboratory, 2026. [Online]. Tersedia: \url{https://colab.research.google.com/drive/...}.
+\end{enumerate}
+
+\end{document}

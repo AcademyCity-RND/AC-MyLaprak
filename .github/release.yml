@@ -1,0 +1,38 @@
+# ==============================================================================
+# KONFIGURASI GITHUB RELEASES AUTO-CHANGELOG
+# ==============================================================================
+# File ini mengatur bagaimana GitHub secara otomatis mengelompokkan Pull Request
+# dan Commit menjadi catatan rilis (Release Notes / Changelog) yang rapi.
+# ==============================================================================
+
+changelog:
+  categories:
+    - title: '🚀 Fitur Baru / New Features'
+      labels:
+        - 'feat'
+        - 'feature'
+        - 'enhancement'
+    - title: '📚 Pembaruan Pedoman & Template Matkul / Course Guidelines'
+      labels:
+        - 'matkul'
+        - 'template'
+        - 'guidelines'
+    - title: '🐛 Perbaikan Bug / Bug Fixes'
+      labels:
+        - 'fix'
+        - 'bug'
+    - title: '📝 Dokumentasi / Documentation'
+      labels:
+        - 'docs'
+        - 'documentation'
+    - title: '🧹 Pembersihan & Privasi / Maintenance & Privacy'
+      labels:
+        - 'chore'
+        - 'refactor'
+        - 'privacy'
+  exclude:
+    labels:
+      - 'ignore-for-release'
+      - 'wontfix'
+      - 'duplicate'
+      - 'invalid'
