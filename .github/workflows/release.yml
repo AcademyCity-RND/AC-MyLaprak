@@ -14,33 +14,37 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
-          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-bundle:
     name: Build Distribution Zip
     needs: release-please
-    if: ${{ steps.release.outputs.release_created }}
+    if: needs.release-please.outputs.release_created == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release bundle
         run: |
-          VERSION="${{ steps.release.outputs.tag_name }}"
+          VERSION="${{ needs.release-please.outputs.tag_name }}"
           BUNDLE_NAME="MyLaprak-${VERSION}.zip"
           echo "Packaging distribution bundle: ${BUNDLE_NAME}"
           zip -r "${BUNDLE_NAME}" skills/ plugin.json README.md CONTRIBUTING.md -x "*.git*"
       - name: Upload bundle to release
         uses: softprops/action-gh-release@v2
         with:
-          files: "MyLaprak-${{ steps.release.outputs.tag_name }}.zip"
-          body_path: ${{ steps.release.outputs.body_path }}
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: "MyLaprak-${{ needs.release-please.outputs.tag_name }}.zip"
+          generate_release_notes: true
           draft: false
           prerelease: false
