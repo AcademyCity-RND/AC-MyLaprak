@@ -1,12 +1,55 @@
 ---
 name: make-laprak-info
-description: >-
-  Gunakan skill ini jika pengguna mengetik command "/make-laprak-info" atau meminta informasi tentang apa itu plugin/skill make-laprak.
+description: Menampilkan panduan penggunaan plugin make-laprak apa adanya.
+version: 0.2.0
+author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [dokumentasi, bantuan, make-laprak]
+    related_skills: [make-laprak, breakdown-matkul]
 ---
 
-# INSTRUKSI: TAMPILKAN TEKS DI BAWAH INI APA ADANYA
+# Make-Laprak Info Skill
 
-Jika skill ini dipanggil, Anda **WAJIB menyalin dan menampilkan** teks di bawah garis ini **persis seperti yang tertulis**. Jangan memodifikasi, memparafrase, atau menambahkan kata-kata sendiri. Jangan memodifikasi file apapun. Langsung tampilkan:
+Skill bantuan yang menampilkan teks panduan plugin `make-laprak` **persis seperti tertulis**. Tidak memodifikasi file apa pun. Kompatibel dengan Antigravity dan Hermes Agent.
+
+## When to Use
+
+- Pengguna memanggil `/make-laprak-info`
+- Pengguna meminta informasi tentang apa itu plugin/skill `make-laprak`, fitur, atau cara pakainya
+
+Don't use for:
+- Menulis laporan (gunakan `make-laprak`)
+- Membuat pedoman matkul (gunakan `breakdown-matkul`)
+
+## Prerequisites
+
+- Tidak ada dependency eksternal
+- Tool tidak diperlukan — cukup tampilkan teks
+
+## How to Run
+
+1. Deteksi panggilan `/make-laprak-info` atau permintaan info setara.
+2. Salin teks di bagian **Procedure** di bawah **persis seperti tertulis**.
+3. Jangan memodifikasi, memparafrase, atau menambahkan kata-kata sendiri.
+4. Jangan mengubah file apa pun.
+
+| Antigravity | Hermes Agent | Kegunaan |
+|---|---|---|
+| (tanpa tool) | (tanpa tool) | Langsung tampilkan teks |
+
+## Quick Reference
+
+| Aksi | Hasil |
+|------|-------|
+| `/make-laprak-info` | Tampilkan panduan lengkap (teks verbatim) |
+| Permintaan info plugin | Tampilkan panduan lengkap (teks verbatim) |
+
+## Procedure
+
+**Tampilkan teks berikut apa adanya — jangan mengubah satu pun kata:**
 
 ---
 
@@ -66,3 +109,17 @@ Plugin AI (Antigravity Skill) yang membantu menyusun **Laporan Praktikum** tingk
 
 - 📂 Repositori: [github.com/AcademyCity-RND/MyLaprak](https://github.com/AcademyCity-RND/MyLaprak)
 - 📝 Panduan kontribusi: lihat file `CONTRIBUTING.md` di repositori.
+
+---
+
+## Pitfalls
+
+- Jangan mengubah, memparafrase, atau menambah kata pada teks panduan di atas — harus persis.
+- Jangan memodifikasi file apa pun saat skill ini dipanggil.
+- Jangan mencampurkan respons tambahan sebelum/sesudah teks panduan.
+
+## Verification
+
+- Teks yang tampil sama persis dengan blok di atas (karakter demi karakter).
+- Tidak ada file yang berubah di disk.
+- Tidak ada kata tambahan di luar blok panduan.

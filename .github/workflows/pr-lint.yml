@@ -1,0 +1,35 @@
+name: PR Title Lint
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-title:
+    name: Semantic PR Title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          validateSingleCommit: true
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            chore
+            matkul
+            template
+            privacy
+          requireScope: false
+          subjectPattern: '^.+$'
+          subjectPatternError: 'Subject must not be empty'

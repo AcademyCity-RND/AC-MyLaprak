@@ -1,90 +1,108 @@
 ---
 name: breakdown-matkul
-description: >-
-  Skill untuk mengekstrak dan menyusun pedoman formatting (.md) serta berkas template (.tex) dari file contoh laporan praktikum.
-  Gunakan skill ini saat menambahkan matkul baru atau memperbarui pedoman matkul yang sudah ada
-  setelah menambahkan file .tex referensi baru.
+description: Ekstrak pedoman format matkul dari contoh laporan LaTeX.
+version: 0.2.0
+author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [latex, matkul, pedoman, template, formatting]
+    related_skills: [make-laprak, make-laprak-info]
 ---
 
-# SYSTEM PROMPT: BREAKDOWN REFERENSI MATKUL
+# Breakdown-Matkul Skill
 
-Anda adalah agen AI yang bertugas menganalisis file `.tex` contoh laporan praktikum dan mengekstrak pola-pola penulisan menjadi sebuah file pedoman `.md` yang terstruktur serta menyusun berkas template *placeholder* `template-<NAMA_MATKUL>.tex`. File ini nantinya akan digunakan oleh skill `make-laprak` sebagai aturan formatting saat menulis laporan baru.
+Menganalisis file `.tex` contoh laporan praktikum dan mengekstrak **pola penulisan** menjadi file pedoman `.md` terstruktur plus berkas template placeholder `template-<NAMA_MATKUL>.tex`. Hasilnya dipakai `make-laprak` sebagai aturan formatting. Kompatibel dengan Antigravity dan Hermes Agent.
 
----
+## When to Use
 
-## ⚠️ ATURAN MUTLAK
+- Menambahkan mata kuliah baru ke plugin `make-laprak`
+- Memperbarui pedoman matkul setelah ada file `.tex` referensi baru
+- Ingin mengganti laporan riil dengan template placeholder demi privasi repositori
 
-1. **ANALISIS, BUKAN COPY-PASTE.** Jangan menyalin isi .tex ke .md. Tugas Anda adalah **mengekstrak pola dan aturan** dari .tex, bukan mereproduksi kontennya.
-2. **JANGAN MENGARANG ATURAN.** Setiap aturan yang Anda tulis di .md HARUS bisa dibuktikan dari minimal satu file .tex referensi. Jika Anda tidak yakin, tandai sebagai "(perlu konfirmasi)".
-3. **KUMULATIF, BUKAN TIMPA.** Jika sudah ada file `.md` sebelumnya, BACA dulu isinya. Perbarui dan perkaya — jangan menghapus aturan yang sudah benar.
-4. **PRIORITASKAN .TEX TERBARU.** Jika ada perbedaan gaya antara .tex lama dan baru, gaya dari file terbaru (nomor tertinggi) adalah yang paling mutakhir dan harus dijadikan rekomendasi utama.
-5. **KEBERSIHAN PRIVASI REPOSITORI:** Selain file `.md`, buat/perbarui berkas template monolitik `template-<NAMA_MATKUL>.tex` dengan teks *placeholder* agar pengguna dapat menghapus berkas laporan riil demi privasi repositori.
+Don't use for:
+- Menulis laporan praktikum (gunakan `make-laprak`)
+- Menampilkan info plugin (gunakan `make-laprak-info`)
 
----
+## Prerequisites
 
-## 🔍 CARA MENEMUKAN FILE REFERENSI
+- Akses ke folder `matkul/` di skill base directory (bukan folder kerja pengguna)
+- Minimal satu file `.tex` laporan riil di `matkul/<NAMA_MATKUL>/`
+- Izin menulis ke folder matkul tersebut
 
-Folder `matkul/` adalah bagian dari plugin `make-laprak` dan **BUKAN** di folder kerja pengguna.
+## How to Run
 
-1. Lihat daftar **Available skills** di system prompt Anda.
-2. Cari entri skill `make-laprak` (bukan `breakdown-matkul`). Dari path SKILL.md-nya, derive lokasi folder `matkul/`.
-3. Gunakan `list_dir` untuk menemukan sub-folder matkul dan file-file di dalamnya.
-4. Gunakan `view_file` dengan **path absolut lengkap** untuk membaca setiap file.
+**Tool mapping lintas platform:**
 
----
+| Antigravity | Hermes Agent | Kegunaan |
+|---|---|---|
+| `list_dir` | `search_files(target='files')` | Menemukan sub-folder matkul & file |
+| `view_file` | `read_file` | Membaca file `.tex`/`.md` |
+| `write_to_file` | `write_file` / `execute_code` | Menulis `.md` dan `template-*.tex` |
 
-## 🧠 ALUR KERJA
+**Menemukan folder referensi:**
+1. AGY: cari entri skill `make-laprak` di Available skills, derive folder `matkul/` dari path SKILL.md-nya.
+2. Hermes: resolve dari skill base directory (`~/.hermes/skills/<category>/make-laprak/matkul/`).
+3. Gunakan path penuh di AGY; path skill-relatif yang di-resolve di Hermes.
 
-### Langkah 1: Identifikasi Target
-- Tanyakan kepada pengguna matkul mana yang ingin di-breakdown (misal: "KEPL").
-- Temukan folder matkul tersebut dan list semua file `.tex` dan `.md` di dalamnya.
-- Jika sudah ada `.md`, baca dan pahami isinya terlebih dahulu.
+## Quick Reference
 
-### Langkah 2: Analisis Semua .tex Laporan Riil
-Baca **setiap** file `.tex` contoh laporan di folder tersebut (abaikan berkas `template-*.tex` agar fokus pada dokumen riil). Untuk masing-masing, catat:
+| Langkah | Fokus | Output |
+|---------|-------|--------|
+| 1 — Identifikasi | Target matkul + list file | Daftar `.tex`/`.md` |
+| 2 — Analisis | Struktur, gambar, sitasi, konvensi, evolusi | Catatan pola |
+| 3 — Susun | File `.md` + `template-<NAMA>.tex` | Draf dokumen |
+| 4 — Tulis | Simpan ke folder matkul | File fisik + ringkasan |
 
-#### A. Struktur Dokumen
-- Hierarki bab/section/subsection apa yang digunakan?
-- Apakah ada `\clearpage` antar section?
-- Apakah ada section khusus (misal: "Tautan Repositori", "Hasil Akhir")?
-- Apakah dokumen memiliki preamble/cover sendiri (seperti PPD) atau langsung diawali `\chapter` (seperti KEPL dan PPG)?
-- Apakah dokumen memiliki bab Dasar Teori dan Kesimpulan (seperti KEPL/PPD) atau tidak memilikinya sama sekali (seperti PPG)?
+## Procedure
 
-#### B. Tata Letak Gambar
-- Bagaimana gambar disisipkan? (`\begin{figure}[H]`?)
-- Berapa lebar gambar? (catat semua variasi `width=...`)
-- Di mana letak penjelasan gambar? (Sebelum gambar seperti Gaya C KEPL, atau di bawah gambar dengan `Penjelasan Gambar :` seperti PPD/PPG?)
-- Apakah ada gambar yang digabungkan dalam satu `figure`? Dengan `\vspace`?
-- Apakah ada gambar side-by-side dengan `\minipage`?
+1. **Identifikasi Target**
+   - Tanyakan matkul yang ingin di-breakdown (mis. "KEPL").
+   - Temukan folder matkul tersebut; list semua file `.tex` dan `.md`.
+   - Jika sudah ada `.md`, baca dan pahami isinya terlebih dahulu.
+   - Selesai ketika: target dan berkas referensi teridentifikasi.
 
-#### C. Format Sitasi & Daftar Pustaka
-- Apakah menggunakan `\cite{...}` + `\begin{thebibliography}`, atau `[\ref{...}]` + `\begin{enumerate}`?
-- Bagaimana format penulisan referensi (APA, IEEE, dll)?
+2. **Analisis Semua `.tex` Laporan Riil**
+   - Baca **setiap** file `.tex` contoh (abaikan `template-*.tex` agar fokus pada dokumen riil).
+   - Untuk masing-masing, catat:
+     - **A. Struktur Dokumen:** hierarki bab/section/subsection; `\clearpage` antar section; section khusus; preamble/cover sendiri (PPD) vs langsung `\chapter` (KEPL/PPG); ada/tidaknya Dasar Teori & Kesimpulan.
+     - **B. Tata Letak Gambar:** `\begin{figure}[H]`?; semua variasi `width=...`; posisi penjelasan (sebelum gambar = Gaya C KEPL, atau di bawah dengan `Penjelasan Gambar :` = PPD/PPG); gambar gabungan dalam satu figure + `\vspace`; side-by-side dengan `\minipage`.
+     - **C. Sitasi & Daftar Pustaka:** `\cite{...}` + `thebibliography`, atau `[\ref{...}]` + `enumerate`; format (APA, IEEE, dll).
+     - **D. Konvensi Penulisan:** `\textit{...}`, `\texttt{...}`, `\enumerate` vs narasi, escape `\_`, `\&`, `\allowbreak`.
+     - **E. Evolusi Gaya:** perubahan dari `.tex` tertua ke terbaru; gaya paling matang/konsisten.
+   - Selesai ketika: semua pola tercatat dengan bukti dari minimal satu file.
 
-#### D. Konvensi Penulisan
-- Bagaimana istilah asing ditulis? (`\textit{...}`?)
-- Bagaimana nama file/perintah ditulis? (`\texttt{...}`?)
-- Bagaimana kesimpulan ditulis? (`\enumerate` 4-5 poin tebal atau narasi paragraf?)
-- Apakah ada karakter khusus yang di-escape? (`\_`, `\&`, `\allowbreak`?)
+3. **Susun File `.md` dan `template-<NAMA_MATKUL>.tex`**
+   - Tulis/perbarui `.md` mengikuti FORMAT OUTPUT di bawah.
+   - Susun `template-<NAMA_MATKUL>.tex` monolitik yang setia pada format asli, memakai teks placeholder.
+   - Selesai ketika: kedua dokumen memiliki struktur sesuai format.
 
-#### E. Evolusi Gaya
-- Apa yang berubah dari .tex tertua ke terbaru?
-- Gaya mana yang paling matang/konsisten?
+4. **Tulis File & Konfirmasi**
+   - **LANGSUNG** tulis `.md` dan `template-<NAMA_MATKUL>.tex` ke folder matkul via `write_file` (Hermes) atau `write_to_file` (AGY).
+   - Tampilkan ringkasan perubahan.
+   - Tanya: *"Pedoman dan template matkul sudah diperbarui. Ada yang perlu direvisi?"*
+   - Selesai ketika: file fisik ada di disk dan ringkasan disampaikan.
 
-### Langkah 3: Susun File `.md` dan Berkas `template-<NAMA_MATKUL>.tex`
-1. Tulis atau perbarui file `.md` menggunakan **format standar** (lihat bagian "FORMAT OUTPUT" di bawah).
-2. Susun berkas acuan `template-<NAMA_MATKUL>.tex` berstruktur monolitik yang setia dengan format aslinya (menggunakan teks *placeholder* / lorem ipsum).
+## Pitfalls
 
-### Langkah 4: Tulis File & Konfirmasi
-- **LANGSUNG** tulis file `.md` dan `template-<NAMA_MATKUL>.tex` ke folder matkul menggunakan `write_to_file`.
-- Tampilkan ringkasan perubahan kepada pengguna.
-- Tanyakan: *"Pedoman dan template matkul sudah diperbarui. Ada yang perlu direvisi?"*
+- **ANALISIS, BUKAN COPY-PASTE:** jangan menyalin isi `.tex` ke `.md`; ekstrak pola dan aturan.
+- **JANGAN MENGARANG ATURAN:** setiap aturan harus dibuktikan dari minimal satu `.tex`. Jika ragu, tandai `(perlu konfirmasi)`.
+- **KUMULATIF, BUKAN TIMPA:** jika `.md` sudah ada, baca dulu; perbarui/perkaya, jangan hapus aturan yang benar.
+- **PRIORITASKAN `.TEX` TERBARU:** nomor tertinggi = paling mutakhir, jadi rekomendasi utama.
+- **KEBERSIHAN PRIVASI:** buat/perbarui `template-<NAMA_MATKUL>.tex` berisi placeholder agar laporan riil bisa dihapus dari repo.
+- Jangan mengabaikan `template-*.tex` saat menganalisis — itu bukan dokumen riil.
+- Jangan menulis laporan untuk penugasan pengguna; skill ini hanya menghasilkan pedoman + template.
 
----
+## Verification
 
-## 📄 FORMAT OUTPUT (.md)
+- File `.md` mengikuti 8 bagian FORMAT OUTPUT di bawah.
+- `template-<NAMA_MATKUL>.tex` berisi placeholder, bukan data laporan riil.
+- Setiap aturan di `.md` memiliki bukti dari minimal satu `.tex` referensi.
+- Aturan lama yang benar tidak hilang (kumulatif).
+- Gaya terbaru menjadi rekomendasi utama bila ada konflik.
 
-File `.md` yang dihasilkan HARUS mengikuti struktur ini:
+## FORMAT OUTPUT (.md)
 
 ```markdown
 # Pedoman Penulisan Laporan Mata Kuliah [NAMA_MATKUL]
@@ -124,9 +142,4 @@ Diekstrak dari [N] laporan riil: `file1.tex`, `file2.tex`, dst.
 [Panduan kapan menggunakan gaya mana, berdasarkan konteks inisiasi.txt]
 ```
 
----
-
-## 📌 CATATAN
-
-- Skill ini **TIDAK** menulis laporan untuk penugasan pengguna. Skill ini menghasilkan pedoman formatting dan template acuan.
-- Setelah selesai, pengguna bisa langsung menggunakan `/make-laprak` yang akan membaca `.md` dan `template-<NAMA_MATKUL>.tex` hasil breakdown ini.
+Setelah selesai, pengguna bisa langsung memanggil `/make-laprak` yang membaca `.md` dan `template-<NAMA_MATKUL>.tex` hasil breakdown ini.

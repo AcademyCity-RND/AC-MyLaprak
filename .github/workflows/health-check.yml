@@ -1,0 +1,35 @@
+name: Health Check
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  schedule:
+    - cron: '0 6 * * 1'  # weekly Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  link-check:
+    name: Dead Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lychee Link Checker
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: '--verbose --max-concurrency 10 README.md CONTRIBUTING.md'
+          fail: true
+
+  uptime-check:
+    name: Optional Uptime Check
+    if: vars.LIVE_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check live URL
+        run: |
+          curl -sfS --max-time 10 "${{ vars.LIVE_URL }}" > /dev/null
+          echo "Uptime OK: ${{ vars.LIVE_URL }}"
