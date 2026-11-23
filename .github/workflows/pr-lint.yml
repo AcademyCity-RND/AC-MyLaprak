@@ -30,7 +30,6 @@ jobs:
             matkul
             template
             privacy
-          scopeRequired: false
+          requireScope: false
           subjectPattern: '^.+$'
           subjectPatternError: 'Subject must not be empty'
-          ignoreScopes: true
