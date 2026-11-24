@@ -8,7 +8,29 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # Agent files
 .agents/
 scratch/
 brain/
+
+# MyLaprak v0.3.0 — gaya matkul adalah MILIK USER, dibuat lokal via /breakdown-matkul.
+# Repo publik hanya menyimpan .gitkeep + README petunjuk ini; semua file .md/.tex
+# di bawah matkul/ tidak boleh ter-track (lihat langkah git rm --cached di plan Fase 3).
+skills/make-laprak/matkul/*
+!skills/make-laprak/matkul/.gitkeep
+!skills/make-laprak/matkul/README.md
+
+# Safety net: folder kerja laporan (input/output user) tidak boleh masuk repo.
+# Lokasi kanoniknya ada di folder kerja user, bukan di sini.
+gambar_raw/
+gambar/
+unmatched/
+_contoh/
+.icg_cache/
+inisiasi.txt

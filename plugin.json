@@ -1,5 +1,6 @@
 {
   "name": "make-laprak-plugin",
+  "version": "0.4.0",
   "description": "Plugin Antigravity untuk membantu menyusun Laporan Praktikum secara interaktif dan terstruktur.",
   "disabled": false
 }
