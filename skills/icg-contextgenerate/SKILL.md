@@ -27,9 +27,12 @@ langsung generate dan jangan mengaudit bebas. Urutannya:
    - Keduanya masuk **satu** `inisiasi.txt`; jangan menyingkirkan salah satunya.
 3. **Klaim isi screenshot harus dari gambar (vision), bukan dari nama file.**
    Jangan mengarang isi proyek/file yang tidak terlihat di screenshot.
-4. **`gambar/` atau `inisiasi.txt` yang belum ada = kondisi saat ini, bukan blocker.**
-   Sumber = folder yang user berikan. `gambar/` hanya output opsional F1. Jangan
-   meminta konsolidasi/renumber sebelum generate kecuali user memintanya.
+4. **`inisiasi.txt` yang belum ada = normal, F2 yang akan membuatnya.**
+   Sumber = folder yang user berikan, dibaca langsung. **Pendekatan user tidak
+   memakai folder `gambar/` sama sekali** — jangan menyebutnya sebagai "belum
+   ada", prasyarat, atau target output. Jangan meminta konsolidasi/renumber
+   sebelum generate kecuali user memintanya. `gambar/` hanya output opsional F1
+   untuk alur lain, bukan bagian dari alur ini.
 5. **Tanya ACC pengerjaan sebelum Pass 1.** Ringkas: file output, section, jumlah
    gambar, dan apa yang belum ada. Lalu berhenti dan tunggu jawaban user.
 6. **Format nama saat F1 dijalankan:** pertahankan suffix manual (`7a`, `8b`,
