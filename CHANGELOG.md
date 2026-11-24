@@ -7,8 +7,8 @@ Semua perubahan signifikan didokumentasikan di sini. Format mengikuti [Keep a Ch
 ## [0.4.0] — 2026-11-24
 
 ### ✨ Baru (F4: Vendor ICG Skills)
-- **Skill `icg-renaming` di-vendor** — Engine Python F1 (extract steps, vision classify, dedup hash+perceptual, canonical naming `1.png`/`1a.png`/`T1.png`, ACC-gated commit) disalin self-contained ke `skills/ICG-Renaming/scripts/`. SKILL.md + `VENDOR.md` (provenance & sync).
-- **Skill `icg-contextgenerate` di-vendor** — Engine Python F2 (two-pass visual census + enriched context, pending store auto-save/resume, `AccRequiredError` gate) disalin self-contained ke `skills/ICG-ContextGenerate/scripts/`. SKILL.md + `VENDOR.md` (provenance & sync).
+- **Skill `icg-renaming` di-vendor** — Engine Python F1 (extract steps, vision classify, dedup hash+perceptual, canonical naming `1.png`/`1a.png`/`T1.png`, ACC-gated commit) disalin self-contained ke `skills/icg-renaming/scripts/`. SKILL.md + `VENDOR.md` (provenance & sync).
+- **Skill `icg-contextgenerate` di-vendor** — Engine Python F2 (two-pass visual census + enriched context, pending store auto-save/resume, `AccRequiredError` gate) disalin self-contained ke `skills/icg-contextgenerate/scripts/`. SKILL.md + `VENDOR.md` (provenance & sync).
 - **Cross-citation docs** — `README.md` menautkan repo ICG + menjelaskan posisi ICG sebagai hulu, alur 4 skill diperbarui, struktur folder diperluas. Engine upstream tetap di [ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) (vendored from upstream **working tree @ 2026-11-24**: base commit `32a81c1d` + R4/R5 fixes; 3 modules untracked, 4 modified), source-of-truth pengembangan tetap di sana.
 - **Backward compat dipertahankan** — `inisiasi.txt` legacy (free-form) tetap didukung penuh; enriched format tidak mengubah kontrak V17.
 

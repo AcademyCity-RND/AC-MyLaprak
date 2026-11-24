@@ -34,7 +34,7 @@ Pending Store & ACC Gate
 
 The vendored Python engine is located at:
 ```
-skills/ICG-ContextGenerate/scripts/src/
+skills/icg-contextgenerate/scripts/src/
 ```
 
 Key modules:
@@ -49,7 +49,7 @@ Key modules:
 ## Installation (Dependencies)
 
 ```bash
-pip install -r skills/ICG-ContextGenerate/scripts/requirements.txt
+pip install -r skills/icg-contextgenerate/scripts/requirements.txt
 ```
 
 Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-generativeai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
@@ -260,7 +260,7 @@ Options:
 
 Run tests against the vendored engine:
 ```bash
-cd skills/ICG-ContextGenerate/scripts
+cd skills/icg-contextgenerate/scripts
 py -3.12 -m pytest tests/test_context_engine.py -v
 ```
 

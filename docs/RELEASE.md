@@ -98,8 +98,8 @@ git push origin work/F5-release
 
 ### Catatan
 - **Stage eksplisit per task:** selalu `git add <file-task>` — jangan `git add -A`.
-  Di MyLaprak ada file untracked/modified dari task lain (`skills/ICG-ContextGenerate/`,
-  `skills/ICG-Renaming/`, `CHANGELOG.md`, modified `README.md`, `CONTRIBUTING.md`,
+  Di MyLaprak ada file untracked/modified dari task lain (`skills/icg-contextgenerate/`,
+  `skills/icg-renaming/`, `CHANGELOG.md`, modified `README.md`, `CONTRIBUTING.md`,
   `plugin.json`, dll.) yang harus masuk commit task-nya sendiri.
 - Branch kerja **tidak di-force-push** setelah dishare
 - Rebase lokal sebelum PR biar clean: `git rebase main`

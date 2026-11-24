@@ -9,7 +9,7 @@ Repositori ini menyediakan _Skill_ AI untuk menyusun **Laporan Praktikum univers
 - 🧩 **ICG Skills di-Vendor (BARU v0.4.0):**
   - **`/icg-renaming`** — membersihkan, mengurutkan, dan menamai screenshot mengikuti struktur modul (PDF/PPTX) → `gambar/` (`1.png`, `1a.png`, `T1.png`, …). Dedup hash + perceptual hash, ACC gate sebelum write.
   - **`/icg-contextgenerate`** — dua-pass (visual census → enriched context) menghasilkan `inisiasi.txt` enriched dengan `[@section]`, `type=`, `group=`, `Konteks:`, `Arah:`. Auto-save/resume via `.icg_cache`, ACC gate pending→final.
-  - Engine Python **self-contained** di `skills/ICG-Renaming/scripts/` dan `skills/ICG-ContextGenerate/scripts/`. Sumber pengembangan tetap di repo ICG (lihat `VENDOR.md` tiap skill).
+  - Engine Python **self-contained** di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan tetap di repo ICG (lihat `VENDOR.md` tiap skill).
   - Kompatibel penuh dengan `inisiasi.txt` legacy (free-form) — backward compat dijamin.
 
 - 🌐 **Dual-Mode yang Jujur:**
@@ -81,13 +81,13 @@ MyLaprak/
     │   └── SKILL.md                      # _contoh/*.tex → matkul/<NAMA>/ (lokal)
     ├── make-laprak-info/
     │   └── SKILL.md                      # Panduan verbatim (v0.4.0)
-    ├── ICG-Renaming/                     # BARU v0.4.0 (vendored dari ICG)
+    ├── icg-renaming/                     # BARU v0.4.0 (vendored dari ICG)
     │   ├── SKILL.md
     │   └── scripts/                      # Engine Python self-contained
     │       ├── src/                      # 7 modul: renaming_engine, vision_engine, security, ...
     │       ├── requirements.txt
     │       └── VENDOR.md                 # Provenance + sync procedure
-    └── ICG-ContextGenerate/              # BARU v0.4.0 (vendored dari ICG)
+    └── icg-contextgenerate/              # BARU v0.4.0 (vendored dari ICG)
         ├── SKILL.md
         └── scripts/                      # Engine Python self-contained
             ├── src/                      # 7 modul: context_engine, vision_engine, security, ...
@@ -112,7 +112,7 @@ Screenshot mentah
    └─(4) /make-laprak ───────────► Laporan.tex siap kompilasi
 ```
 
-Skill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/ICG-Renaming/scripts/` dan `skills/ICG-ContextGenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.
+Skill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.
 
 Repositori ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator)
 

@@ -14,7 +14,7 @@ This directory contains a **vendored copy** of the ImageContext-Generator Contex
 | Commit date | 2026-10-23 18:57:49 +0700 (base HEAD; source snapshot is newer) |
 | Commit subject | `feat(director): add output path option, resume capability, and auto-save for Director Mode` (base HEAD) |
 | Vendor date | 2026-11-24 (F4 integration into MyLaprak v0.4.0) |
-| Vendored paths | `src/*.py` → `skills/ICG-ContextGenerate/scripts/src/` |
+| Vendored paths | `src/*.py` → `skills/icg-contextgenerate/scripts/src/` |
 
 ## What was copied
 
@@ -35,8 +35,8 @@ This directory contains a **vendored copy** of the ImageContext-Generator Contex
 cd /c/laragon/www/ImageContext-Generator && git pull
 
 # 2. Re-copy engine files into MyLaprak
-cp src/*.py "C:/LAPORAN UGM/Semester 5/MyLaprak/skills/ICG-ContextGenerate/scripts/src/"
-cp requirements.txt "C:/LAPORAN UGM/Semester 5/MyLaprak/skills/ICG-ContextGenerate/scripts/requirements.txt"
+cp src/*.py "C:/LAPORAN UGM/Semester 5/MyLaprak/skills/icg-contextgenerate/scripts/src/"
+cp requirements.txt "C:/LAPORAN UGM/Semester 5/MyLaprak/skills/icg-contextgenerate/scripts/requirements.txt"
 
 # 3. Update this file's "Vendored commit" field
 cd /c/laragon/www/ImageContext-Generator && git rev-parse HEAD
@@ -54,7 +54,7 @@ cd /c/laragon/www/ImageContext-Generator && git rev-parse HEAD
 
 ## Known differences from upstream
 
-- SKILL.md `name:` changed from upstream `icg-context-generate` to `icg-contextgenerate` to match MyLaprak skill naming convention (mixed-case directory names).
+- SKILL.md `name:` changed from upstream `icg-context-generate` to `icg-contextgenerate`, and the vendored folder was renamed to `skills/icg-contextgenerate/` so skill name and folder name match (lowercase required by skill lint).
 - Added `Local Engine Location`, `Installation (Dependencies)`, and `Vendor Metadata` sections to SKILL.md.
 - **`requirements.txt` extended**: `PyMuPDF>=1.23` (module `fitz`) and `python-pptx>=0.6` added — these are imported by the engine (`knowledge_manager.py`, `renaming_engine.py`) but absent from upstream `requirements.txt`. Both SKILL.md dependency lists were updated to match. This is required for PDF/PPTX step extraction to work from a clean `pip install -r`.
 - Engine Python source files are byte-identical to the upstream **working tree snapshot @ 2026-11-24** (see "Source snapshot" above). They are **not** byte-identical to commit `32a81c1` alone — 3 modules are untracked and 4 are modified relative to that commit. No Python code was modified during vendoring.

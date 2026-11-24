@@ -36,8 +36,8 @@ git checkout -b feat/<deskripsi-singkat>   # mis. feat/parser-validate-pair-symm
 | `skills/make-laprak/template-general/` | Universal fallback (general.md, *.tex) | **Tidak boleh mengubah `type`→width di `general.md` tanpa alasan kuat** (V7 = stabil) |
 | `skills/breakdown-matkul/SKILL.md` | Ekstraksi `_contoh/` → `matkul/` lokal | |
 | `skills/make-laprak-info/SKILL.md` | Panduan verbatim (v0.4.0) | Hanya update jika fitur core berubah |
-| `skills/ICG-Renaming/SKILL.md` | ICG F1 Renaming Engine (vendored) | **Read-only** — engine di VENDOR.md upstream |
-| `skills/ICG-ContextGenerate/SKILL.md` | ICG F2 ContextGenerate Engine (vendored) | **Read-only** — engine di VENDOR.md upstream |
+| `skills/icg-renaming/SKILL.md` | ICG F1 Renaming Engine (vendored) | **Read-only** — engine di VENDOR.md upstream |
+| `skills/icg-contextgenerate/SKILL.md` | ICG F2 ContextGenerate Engine (vendored) | **Read-only** — engine di VENDOR.md upstream |
 | `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md` | Dokumentasi | Bisa diubah bebas |
 | `scripts/` | Tooling pengembang | |
 | `.github/workflows/` | CI/CD | |
@@ -147,8 +147,8 @@ Diekstrak dari [N] laporan riil: `file1.tex`, `file2.tex`, ...
 2. `skills/make-laprak/template-general/general.md` — tabel `type`→width utuh (V7).
 3. `skills/breakdown-matkul/SKILL.md` — procedure merujuk `_contoh/` input + `matkul/` lokal output.
 4. `skills/make-laprak-info/SKILL.md` — verbatim panduan v0.4.0 (baca sebelum commit).
-5. `skills/ICG-Renaming/SKILL.md` — VENDOR.md konsisten dengan upstream ICG, `scripts/src/` utuh.
-6. `skills/ICG-ContextGenerate/SKILL.md` — VENDOR.md konsisten dengan upstream ICG, `scripts/src/` utuh.
+5. `skills/icg-renaming/SKILL.md` — VENDOR.md konsisten dengan upstream ICG, `scripts/src/` utuh.
+6. `skills/icg-contextgenerate/SKILL.md` — VENDOR.md konsisten dengan upstream ICG, `scripts/src/` utuh.
 7. `README.md` — struktur folder mencerminkan realita (matkul/ kosong + .gitkeep + ICG skills).
 8. `CONTRIBUTING.md` — panduan ini sendiri.
 

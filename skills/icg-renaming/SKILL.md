@@ -28,7 +28,7 @@ RenamingPlan.commit()   →  write gambar/ + renaming_report.txt (ACC gate)
 
 The vendored Python engine is located at:
 ```
-skills/ICG-Renaming/scripts/src/
+skills/icg-renaming/scripts/src/
 ```
 
 Key modules:
@@ -41,7 +41,7 @@ Key modules:
 ## Installation (Dependencies)
 
 ```bash
-pip install -r skills/ICG-Renaming/scripts/requirements.txt
+pip install -r skills/icg-renaming/scripts/requirements.txt
 ```
 
 Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-generativeai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
@@ -163,7 +163,7 @@ Options:
 
 Run tests against the vendored engine:
 ```bash
-cd skills/ICG-Renaming/scripts
+cd skills/icg-renaming/scripts
 py -3.12 -m pytest tests/test_renaming_engine.py -v
 ```
 
