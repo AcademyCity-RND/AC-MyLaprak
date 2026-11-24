@@ -25,7 +25,7 @@ Kontribusi ke repo ini berarti memperbaiki **core skill**, **template general**,
 
 ### 1. Fork & Branch
 ```bash
-git fork https://github.com/AcademyCity-RND/MyLaprak
+git fork https://github.com/AcademyCity-RND/AC-MyLaprak
 git checkout -b feat/<deskripsi-singkat>   # mis. feat/parser-validate-pair-symmetry
 ```
 
@@ -165,4 +165,4 @@ Diekstrak dari [N] laporan riil: `file1.tex`, `file2.tex`, ...
 
 ## 📬 Kontak
 
-Issue: [github.com/AcademyCity-RND/MyLaprak/issues](https://github.com/AcademyCity-RND/MyLaprak/issues)
+Issue: [github.com/AcademyCity-RND/MyLaprak/issues](https://github.com/AcademyCity-RND/AC-MyLaprak/issues)

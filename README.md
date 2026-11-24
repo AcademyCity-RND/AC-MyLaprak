@@ -29,21 +29,40 @@ Repositori ini menyediakan _Skill_ AI untuk menyusun **Laporan Praktikum univers
 ## 📦 Cara Instalasi Plugin
 
 ### Opsi A — GitHub Releases (paling mudah)
-1. Buka tab **[Releases](https://github.com/AcademyCity-RND/MyLaprak/releases)**.
+1. Buka tab **[Releases](https://github.com/AcademyCity-RND/AC-MyLaprak/releases)**.
 2. Unduh bundle `MyLaprak-vX.X.X.zip` terbaru.
 3. Ekstrak ke direktori plugin: `~/.gemini/config/plugins/make-laprak` (Antigravity) atau folder skills Hermes Anda.
 
 ### Opsi B — Git Clone
 ```bash
 # Global
-git clone https://github.com/AcademyCity-RND/MyLaprak.git ~/.gemini/config/plugins/make-laprak
+git clone https://github.com/AcademyCity-RND/AC-MyLaprak.git ~/.gemini/config/plugins/make-laprak
 
 # Per-workspace
 mkdir -p .agents/plugins/
-git clone https://github.com/AcademyCity-RND/MyLaprak.git .agents/plugins/make-laprak
+git clone https://github.com/AcademyCity-RND/AC-MyLaprak.git .agents/plugins/make-laprak
 ```
 
 > Clone bersih hanya berisi `template-general/` dan `matkul/.gitkeep` + README. Itu **disengaja**.
+
+### Opsi C — Hermes
+```bash
+# macOS/Linux
+cp -r skills/make-laprak skills/make-laprak-info skills/breakdown-matkul ~/.hermes/skills/productivity/
+cp -r skills/icg-renaming skills/icg-contextgenerate ~/.hermes/skills/software-development/
+
+# Windows (Git Bash)
+cp -r skills/make-laprak skills/make-laprak-info skills/breakdown-matkul "$LOCALAPPDATA/hermes/skills/productivity/"
+cp -r skills/icg-renaming skills/icg-contextgenerate "$LOCALAPPDATA/hermes/skills/software-development/"
+```
+
+Lalu pasang dependensi ICG:
+```bash
+py -3.12 -m pip install -r skills/icg-renaming/scripts/requirements.txt
+py -3.12 -m pip install -r skills/icg-contextgenerate/scripts/requirements.txt
+```
+
+> 🧪 Mau minta orang lain menguji? Kirimkan **[Panduan Uji Coba Mandiri](docs/PANDUAN-UJI-COBA.md)** — berisi prasyarat, langkah per command, dan format laporan bug.
 
 ---
 
