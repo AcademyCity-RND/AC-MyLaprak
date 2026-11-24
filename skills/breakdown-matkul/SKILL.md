@@ -1,6 +1,6 @@
 ---
 name: breakdown-matkul
-description: Ekstrak pedoman format matkul dari contoh laporan LaTeX (versi 0.3.0: baca dari folder kerja _contoh/, output ke matkul/ lokal).
+description: 'Ekstrak pedoman format matkul dari contoh laporan LaTeX (versi 0.3.0: baca dari folder kerja _contoh/, output ke matkul/ lokal).'
 version: 0.3.0
 author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
 license: MIT

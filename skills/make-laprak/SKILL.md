@@ -1,6 +1,6 @@
 ---
 name: make-laprak
-description: Menyusun laporan praktikum LaTeX iteratif dari inisiasi (v0.3.0: parser enriched + legacy, matkul/ lokal, type→width lookup, sitasi ICG).
+description: 'Menyusun laporan praktikum LaTeX iteratif dari inisiasi (v0.3.0: parser enriched + legacy, matkul/ lokal, type→width lookup, sitasi ICG).'
 version: 0.3.0
 author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
 license: MIT

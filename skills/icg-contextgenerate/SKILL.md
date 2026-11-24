@@ -32,10 +32,9 @@ Pending Store & ACC Gate
 
 ## Local Engine Location
 
-The vendored Python engine is located at:
-```
-skills/icg-contextgenerate/scripts/src/
-```
+The vendored Python engine lives in `scripts/src/`, relative to this SKILL.md
+(Hermes: `~/.hermes/skills/software-development/icg-contextgenerate/scripts/src/`;
+Antigravity: `<repo>/skills/icg-contextgenerate/scripts/src/`).
 
 Key modules:
 - `context_engine.py` — Core engine (Pass 1 visual census, Pass 2 context generation, pending store, ACC gate)
@@ -49,12 +48,12 @@ Key modules:
 ## Installation (Dependencies)
 
 ```bash
-pip install -r skills/icg-contextgenerate/scripts/requirements.txt
+pip install -r scripts/requirements.txt   # jalankan dari folder skill
 ```
 
-Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-generativeai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
+Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-genai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
 
-> **Note:** Requires Python 3.12+. Set `GEMINI_API_KEY` in environment or `.env` for vision generation.
+> **Note:** Requires Python 3.12+. Set `GOOGLE_API_KEY` in environment or `.env` for vision generation.
 
 ---
 
@@ -260,7 +259,7 @@ Options:
 
 Run tests against the vendored engine:
 ```bash
-cd skills/icg-contextgenerate/scripts
+cd scripts   # dari folder skill ini
 py -3.12 -m pytest tests/test_context_engine.py -v
 ```
 

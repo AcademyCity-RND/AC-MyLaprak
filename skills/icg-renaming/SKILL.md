@@ -26,10 +26,9 @@ RenamingPlan.commit()   →  write gambar/ + renaming_report.txt (ACC gate)
 
 ## Local Engine Location
 
-The vendored Python engine is located at:
-```
-skills/icg-renaming/scripts/src/
-```
+The vendored Python engine lives in `scripts/src/`, relative to this SKILL.md
+(Hermes: `~/.hermes/skills/software-development/icg-renaming/scripts/src/`;
+Antigravity: `<repo>/skills/icg-renaming/scripts/src/`).
 
 Key modules:
 - `renaming_engine.py` — Core engine (step extraction, dedup, naming, plan building)
@@ -41,12 +40,12 @@ Key modules:
 ## Installation (Dependencies)
 
 ```bash
-pip install -r skills/icg-renaming/scripts/requirements.txt
+pip install -r scripts/requirements.txt   # jalankan dari folder skill
 ```
 
-Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-generativeai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
+Dependencies: `pyyaml`, `Pillow`, `python-dotenv`, `typer[all]`, `rich`, `google-genai`, `openai`, `fitz` (PyMuPDF), `python-pptx`.
 
-> **Note:** Requires Python 3.12+. Set `GEMINI_API_KEY` in environment or `.env` for vision classification.
+> **Note:** Requires Python 3.12+. Set `GOOGLE_API_KEY` in environment or `.env` for vision classification.
 
 ---
 
@@ -163,7 +162,7 @@ Options:
 
 Run tests against the vendored engine:
 ```bash
-cd skills/icg-renaming/scripts
+cd scripts   # dari folder skill ini
 py -3.12 -m pytest tests/test_renaming_engine.py -v
 ```
 

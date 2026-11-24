@@ -1,6 +1,6 @@
 ---
 name: make-laprak-info
-description: Menampilkan panduan penggunaan plugin make-laprak apa adanya (v0.3.0: alur ICG + parser dual-mode).
+description: 'Menampilkan panduan penggunaan plugin make-laprak apa adanya (v0.3.0: alur ICG + parser dual-mode).'
 version: 0.3.0
 author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
 license: MIT
