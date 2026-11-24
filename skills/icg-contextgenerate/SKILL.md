@@ -22,8 +22,25 @@ langsung generate dan jangan mengaudit bebas. Urutannya:
    - **Jangan batalkan tugas** karena nomor bab berbeda dari kata user. Tugas
      ditentukan oleh folder/tugas yang user berikan, bukan penomoran modul.
 2. **Petakan screenshot ke section laporan.** Konvensi yang berlaku (contoh PPD-11):
-   - nama tanpa prefix `T` → **Hasil Praktikum**
-   - nama dengan prefix `T` (`T1`, `T3-a`, `T8-c`) → **Tugas Praktikum**
+   - nama tanpa prefix `T` → **Hasil Praktikum**, sumber materi = heading `LANGKAH PERCOBAAN`
+     (mis. "Pembuatan model dan penyimpanan model", "Pembuatan Flask", "Integrasi Model",
+     "Menjalankan aplikasi Flask dengan WSGI")
+   - nama dengan prefix `T` (`T1`, `T3-a`, `T8-c`) → **Tugas Praktikum**, sumber materi =
+     heading `TUGAS & ANALISIS` (mis. "Pelatihan Model", "Dashboard dengan Flask")
+   - **Judul subsection diambil dari heading modul, bukan narasi karangan.** Nama proyek/
+     dataset yang terlihat di screenshot (mis. "HCV", "Suhu Seoul") masuk ke `Konteks:`,
+     jangan dijadikan judul section. Untuk sub-langkah, pertahankan istilah modul apa adanya.
+   - **Contoh judul benar (PPD-11, modul Pertemuan X / Flask):**
+     `Hasil Praktikum: Pembuatan Model dan Penyimpanan Model`,
+     `Hasil Praktikum: Pembuatan Flask dan Integrasi Model`,
+     `Hasil Praktikum: Menjalankan Aplikasi Flask dengan WSGI`,
+     `Tugas Praktikum: Pelatihan Model`,
+     `Tugas Praktikum: Dashboard dengan Flask`.
+     Hindari judul karangan seperti `Dasar Pemodelan dan Prediksi Data Tabular (HCV)`
+     atau `Tugas Praktikum: Antarmuka Web dan Hasil Prediksi Suhu Seoul`.
+   - **Penempatan gambar mengikuti isi langkah modul, bukan narasi LLM.**
+     Misal screenshot eksekusi training (`7a.png`) masuk section "Pembuatan Model dan
+     Penyimpanan Model", bukan "Menjalankan Aplikasi Flask dengan WSGI".
    - Keduanya masuk **satu** `inisiasi.txt`; jangan menyingkirkan salah satunya.
 3. **Klaim isi screenshot harus dari gambar (vision), bukan dari nama file.**
    Jangan mengarang isi proyek/file yang tidak terlihat di screenshot.
@@ -42,6 +59,24 @@ langsung generate dan jangan mengaudit bebas. Urutannya:
 **Anti-pattern yang harus dihindari:** menyimpulkan screenshot "bukan tugas ini"
 hanya dari nama file; menyebut file/proyek yang tidak ada di folder; menolak
 generate karena `gambar/` kosong; atau menjalankan Pass 1 sebelum ACC.
+
+---
+
+## Validasi WAJIB sebelum ACC
+
+Jangan minta ACC sebelum pemeriksaan ini lolos pada `.icg_cache/pending_inisiai.txt`:
+
+1. `parse_inisiai()` → jumlah baris == jumlah PNG sumber; tidak ada filename hilang,
+   duplikat, atau "hantu" (nama yang tidak ada di folder).
+2. Tiap `type` masuk `{config, code, terminal, gui, diagram, log}`; `group` either
+   `single` atau `pair:<file>` dengan pasangan simetris (jika A→B maka B→A).
+   Tolak `group` mengandung `(none)` atau nama bukan file nyata (contoh bug: `pair:8ico (none)`).
+3. Section: semua file tanpa `T` di section **Hasil Praktikum**, semua file ber-`T` di
+   **Tugas Praktikum**; judul section = heading modul (lihat contoh di atas).
+4. Bila Pass 1 salah, perbaiki dulu `pass1_plan.json` DAN baris pending yang terdampak,
+   lalu validasi ulang — jangan langsung commit.
+5. Setelah ACC: `ContextEngine.commit_pending(pending, final, approved=True)` memindahkan
+   pending ke `inisiai.txt` final (pending dihapus).
 
 ---
 
@@ -342,6 +377,9 @@ Test coverage:
 | Screenshot non-T dianggap "bukan tugas" | non-T = Hasil Praktikum, T = Tugas Praktikum (satu dokumen) |
 | `gambar/` kosong dijadikan blocker | `gambar/` opsional; sumber = folder user |
 | Mengarang isi screenshot dari nama file | Buka gambar via vision sebelum mengklaim |
+| Judul section dikarang dari isi screenshot (nama proyek/dataset) | Ambil heading `LANGKAH PERCOBAAN` / `TUGAS & ANALISIS` dari modul; nama proyek hanya di `Konteks:` |
+| Section mapping mengikuti narasi LLM, bukan langkah modul | Cocokkan tiap screenshot ke sub-langkah modul (training → "Pembuatan Model", server Flask → "Menjalankan Aplikasi dengan WSGI") |
+| Pair ghost / section asimetris dari Pass 1 | Validasi sebelum ACC: pair simetris, `group=` tanpa `(none)`, semua file unik & ada di folder |
 
 ---
 
