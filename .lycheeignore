@@ -1,6 +1,0 @@
-# lychee link-checker exclusion patterns (one regex per line).
-
-# Upstream ICG repository is PRIVATE → returns 404 for anonymous fetches
-# in GitHub Actions. Keep docs pointing to it anyway; do not publicize
-# without explicit approval (may contain confidential PRD material).
-github\.com/AcademyCity-RND/AC-ImageContext-Generator(\.git)?
