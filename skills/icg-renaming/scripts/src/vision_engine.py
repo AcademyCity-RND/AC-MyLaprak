@@ -15,8 +15,8 @@ import re
 from pathlib import Path
 from typing import List, Dict, Any
 
-import google.generativeai as genai
-from google.api_core.exceptions import GoogleAPIError
+import google.genai.errors as genai_errors
+from google import genai
 from PIL import Image, UnidentifiedImageError
 from rich.console import Console
 
@@ -31,6 +31,23 @@ def _clean_ai_response_line(text: str) -> str:
     return re.sub(pattern, "", text.strip())
 
 
+class _LegacyModelShim:
+    """Expose legacy ``model.generate_content(contents, generation_config=...)``
+    on top of google-genai 3.x, keeping every existing call site and mock intact.
+    """
+
+    def __init__(self, client: "genai.Client", model_name: str):
+        self._client = client
+        self._model_name = model_name
+
+    def generate_content(self, contents, generation_config=None, **kwargs):
+        call_kwargs = {"model": self._model_name, "contents": contents}
+        if generation_config is not None:
+            call_kwargs["config"] = generation_config
+        call_kwargs.update(kwargs)
+        return self._client.models.generate_content(**call_kwargs)
+
+
 class VisionEngine:
     """Gemini Vision wrapper. API key is read from GOOGLE_API_KEY at init."""
 
@@ -41,9 +58,9 @@ class VisionEngine:
         if not key:
             console.print("[red]❌ Error: GOOGLE_API_KEY not found![/red]")
             raise ValueError("Google API key is required")
-        genai.configure(api_key=key)
-        self.model = genai.GenerativeModel(model_name or self._DEFAULT_MODEL)
+        self._client = genai.Client(api_key=key)
         self.model_name = model_name or self._DEFAULT_MODEL
+        self.model = _LegacyModelShim(self._client, self.model_name)
 
     def __repr__(self) -> str:
         return f"VisionEngine(model={self.model_name!r})"
@@ -82,7 +99,7 @@ Aturan penting:
 """
                 response = self.model.generate_content([img, prompt])
                 return response.text.strip() if response.text else ""
-        except (OSError, UnidentifiedImageError, GoogleAPIError, ValueError) as exc:
+        except (OSError, UnidentifiedImageError, genai_errors.APIError, ValueError) as exc:
             console.print(
                 f"[yellow]⚠️ Error analyzing {image_path}: {redact(str(exc))}[/yellow]"
             )
