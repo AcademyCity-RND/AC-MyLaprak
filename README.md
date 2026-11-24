@@ -112,9 +112,9 @@ Screenshot mentah
    └─(4) /make-laprak ───────────► Laporan.tex siap kompilasi
 ```
 
-Skill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.
+Skill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/AC-ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.
 
-Repositori ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator)
+Repositori ICG: [github.com/AcademyCity-RND/AC-ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator)
 
 ---
 

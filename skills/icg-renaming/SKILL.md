@@ -6,7 +6,7 @@ category: software-development
 
 # ICG Renaming Engine (F1) — Skill (VENDORED)
 
-> **VENDORED COPY** — This skill is a local copy of the ICG Renaming Engine from the [ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) repository (upstream commit: see VENDOR.md). The authoritative source for development remains the upstream repo. Changes here should be synced back upstream or re-vendored.
+> **VENDORED COPY** — This skill is a local copy of the ICG Renaming Engine from the [ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator) repository (upstream commit: see VENDOR.md). The authoritative source for development remains the upstream repo. Changes here should be synced back upstream or re-vendored.
 
 This skill covers the **ImageContext-Generator Renaming Engine (F1)** — a pipeline that turns a raw folder of lab screenshots into an ordered, deduplicated, canonically named image set (`gambar/`) following the module's step structure from PDF/PPTX references.
 
@@ -218,7 +218,7 @@ Test coverage:
 
 ## Vendor Metadata
 
-- **Upstream Repo:** https://github.com/AcademyCity-RND/ImageContext-Generator
+- **Upstream Repo:** https://github.com/AcademyCity-RND/AC-ImageContext-Generator
 - **Upstream Skill:** `icg-renaming-engine` (root SKILL.md)
 - **Vendored Commit:** See `VENDOR.md` in `scripts/`
 - **Vendor Date:** 2026-11-24 (F4 integration)

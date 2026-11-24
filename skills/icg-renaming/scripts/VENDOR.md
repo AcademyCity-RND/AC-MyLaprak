@@ -7,7 +7,7 @@ This directory contains a **vendored copy** of the ImageContext-Generator Renami
 | Field | Value |
 |-------|-------|
 | Upstream repository | `C:/laragon/www/ImageContext-Generator` |
-| Upstream URL | https://github.com/AcademyCity-RND/ImageContext-Generator |
+| Upstream URL | https://github.com/AcademyCity-RND/AC-ImageContext-Generator |
 | Vendored commit | `32a81c1d499217965518548a2a9a28cd6bd422ac` (base HEAD only — **not** the exact source) |
 | Source snapshot | Upstream **working tree @ 2026-11-24**, i.e. commit `32a81c1` + uncommitted R4/R5 fixes |
 | Source detail | 4 modules modified vs. `32a81c1` (`cli.py`, `director.py`, `knowledge_manager.py`, `vision_engine.py`); 3 modules **untracked** in that commit (`context_engine.py`, `renaming_engine.py`, `security.py`) — vendored bytes came from the working tree, not from the commit object |

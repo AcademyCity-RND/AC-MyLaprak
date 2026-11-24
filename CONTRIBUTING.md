@@ -2,7 +2,7 @@
 
 Terima kasih telah tertarik berkontribusi! Panduan ini menjelaskan cara menambahkan **gaya matkul baru** agar plugin `make-laprak` bisa menyesuaikan format laporan untuk mata kuliah Anda.
 
-> **Sitasi silang:** Engine skill ICG (`icg-renaming`, `icg-contextgenerate`) di-vendor dari [ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator). Sumber pengembangan (upstream) tetap di repo ICG — lihat `VENDOR.md` di masing-masing skill sebelum mengubah engine.
+> **Sitasi silang:** Engine skill ICG (`icg-renaming`, `icg-contextgenerate`) di-vendor dari [ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator). Sumber pengembangan (upstream) tetap di repo ICG — lihat `VENDOR.md` di masing-masing skill sebelum mengubah engine.
 
 ---
 

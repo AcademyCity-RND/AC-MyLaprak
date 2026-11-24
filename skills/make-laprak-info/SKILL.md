@@ -112,7 +112,7 @@ Plugin AI (Antigravity Skill) yang membantu menyusun **Laporan Praktikum** tingk
 ## 7. Dokumentasi & Kontribusi
 
 - 📂 Repositori: [github.com/AcademyCity-RND/MyLaprak](https://github.com/AcademyCity-RND/MyLaprak)
-- 📂 Repositori ICG (renaming + context): [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator)
+- 📂 Repositori ICG (renaming + context): [github.com/AcademyCity-RND/AC-ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator)
 - 📝 Panduan kontribusi: lihat file `CONTRIBUTING.md` di repositori.
 
 ---
