@@ -1,3 +1,29 @@
-
+# ==============================================================================
+# COMMIT MESSAGE TEMPLATE — MyLaprak
+# ==============================================================================
+# Aktifkan: git config commit.template .gitmessage
+# Format:   <type>(<scope>): <deskripsi>
+# Contoh:  feat(release): auto versioning + changelog via git-cliff
+# ==============================================================================
+# <type>(<scope>): <deskripsi singkat, imperatif, lowercase>
+#
+# <body opsional — jelaskan WHY, bukan WHAT. Baris maksimal 72 karakter.>
+#
+# <footer opsional — BREAKING CHANGE: ..., Refs: #123, dll.>
+#
+# ==============================================================================
+# TYPE:
+#   feat     : fitur baru (minor bump)
+#   fix      : perbaikan bug (patch bump)
+#   docs     : dokumentasi saja
+#   refactor : refactor tanpa perubahan perilaku
+#   perf     : perbaikan performa
+#   test     : tambah/ubah test
+#   chore    : maintenance, dependency, build tooling
+#   ci       : perubahan CI/CD workflow
+#   build    : perubahan build system
+#
+# SCOPE: modul/fitur terdampak (make-laprak, breakdown-matkul, parser, release, dll.)
+# ==============================================================================
 
 Co-authored-by: Avin1731 <les.017ciers@gmail.com>

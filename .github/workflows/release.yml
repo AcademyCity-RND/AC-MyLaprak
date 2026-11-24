@@ -1,39 +1,134 @@
-name: Release
+name: Release — Auto Version, Changelog, & GitHub Release
 
 on:
+  # Manual dispatch after ACC gate: user runs workflow, provides bump level (optional)
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Bump level: auto (default), patch, minor, major. "auto" reads from commits.'
+        required: false
+        default: 'auto'
+        type: choice
+        options: ['auto', 'patch', 'minor', 'major']
+      dry_run:
+        description: 'If true, skip tag push and release creation. Only show what would happen.'
+        required: false
+        default: false
+        type: boolean
+  # Tag push fallback: push v* tag -> generate changelog + release (no auto-bump)
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write  # required to push CHANGELOG.md, create tag, create release
+  checks: read
 
 jobs:
-  build-and-release:
-    name: Build Bundle and Publish Release
+  release:
+    name: Auto Version + Changelog + Bundle + Release
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (full history for git-cliff)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release Distribution Bundle (.zip)
+      - name: Setup Git Identity
         run: |
-          VERSION="${GITHUB_REF_NAME}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@git-cliff
+
+      - name: Determine Next Version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG="${GITHUB_REF_NAME}"
+            echo "version=${TAG}" >> $GITHUB_OUTPUT
+            echo "Using pushed tag: $TAG"
+          else
+            BUMP="${{ github.event.inputs.bump }}"
+            if [ "$BUMP" = "auto" ]; then
+              NEXT_VERSION=$(git cliff --bumped-version)
+            else
+              NEXT_VERSION=$(git cliff --bumped-version --bump "$BUMP")
+            fi
+            if [[ ! "$NEXT_VERSION" =~ ^v ]]; then
+              NEXT_VERSION="v$NEXT_VERSION"
+            fi
+            echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+            echo "Computed next version: $NEXT_VERSION"
+          fi
+
+      - name: Generate CHANGELOG.md
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git cliff --tag "$VERSION" --output CHANGELOG.md --verbose
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Commit CHANGELOG.md (if workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run != 'true'
+        run: |
+          git add CHANGELOG.md
+          git commit -m "chore(release): generate CHANGELOG.md for ${{ steps.version.outputs.version }}"
+          # Push uses GITHUB_TOKEN — GitHub does NOT trigger new workflow runs from
+          # GITHUB_TOKEN pushes (except workflow_dispatch/repository_dispatch),
+          # so other CI workflows (ci.yml) won't run on this commit. [skip ci] is a no-op on GH Actions.
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Create & Push Tag (if workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run != 'true'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
+
+      - name: Create Distribution Bundle (.zip)
+        if: inputs.dry_run != 'true'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
           BUNDLE_NAME="MyLaprak-${VERSION}.zip"
           echo "Packaging distribution bundle: ${BUNDLE_NAME}"
-          
-          # Buat file zip berisi bundle siap pakai untuk Antigravity plugin
-          zip -r "${BUNDLE_NAME}" skills/ plugin.json README.md CONTRIBUTING.md -x "*.git*"
+          zip -r "${BUNDLE_NAME}" skills/ plugin.json README.md CONTRIBUTING.md CHANGELOG.md -x "*.git*"
 
-      - name: Publish GitHub Release with Auto-Changelog
+      - name: Create GitHub Release
+        if: inputs.dry_run != 'true'
         uses: softprops/action-gh-release@v2
         with:
-          name: "MyLaprak Release ${{ github.ref_name }}"
-          files: "MyLaprak-${{ github.ref_name }}.zip"
-          generate_release_notes: true
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "MyLaprak Release ${{ steps.version.outputs.version }}"
+          body: ${{ steps.changelog.outputs.changelog }}
+          files: "MyLaprak-${{ steps.version.outputs.version }}.zip"
           draft: false
           prerelease: false
+          generate_release_notes: false
+
+      - name: Notify Discord (Release Published)
+        if: inputs.dry_run != 'true'
+        run: |
+          # Guard inside run: step-level env is NOT visible in the step `if:`,
+          # so the secret check must live here, not in the condition.
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL not set — skipping Discord notification."
+            exit 0
+          fi
+          VERSION="${{ steps.version.outputs.version }}"
+          REPO="MyLaprak"
+          URL="https://github.com/${{ github.repository }}/releases/tag/$VERSION"
+          CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          SHORT_CHANGELOG=$(echo "$CHANGELOG" | head -c 1500)
+          curl -X POST "$DISCORD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg content "🚀 **$REPO $VERSION released!** <$URL>" \
+              --arg description "$SHORT_CHANGELOG" \
+              '{content: $content, embeds: [{title: "Release Notes", description: $description, color: 3066993}]}')"
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
