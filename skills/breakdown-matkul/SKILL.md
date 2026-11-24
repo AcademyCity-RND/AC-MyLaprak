@@ -1,19 +1,21 @@
 ---
 name: breakdown-matkul
-description: Ekstrak pedoman format matkul dari contoh laporan LaTeX.
-version: 0.2.0
+description: Ekstrak pedoman format matkul dari contoh laporan LaTeX (versi 0.3.0: baca dari folder kerja _contoh/, output ke matkul/ lokal).
+version: 0.3.0
 author: AcademyCity-RND (AcademyCity-RND), Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [latex, matkul, pedoman, template, formatting]
-    related_skills: [make-laprak, make-laprak-info]
+    related_skills: [make-laprak, make-laprak-info, icg-renaming, icg-contextgenerate]
 ---
 
 # Breakdown-Matkul Skill
 
-Menganalisis file `.tex` contoh laporan praktikum dan mengekstrak **pola penulisan** menjadi file pedoman `.md` terstruktur plus berkas template placeholder `template-<NAMA_MATKUL>.tex`. Hasilnya dipakai `make-laprak` sebagai aturan formatting. Kompatibel dengan Antigravity dan Hermes Agent.
+Menganalisis file `.tex` contoh laporan praktikum dan mengekstrak **pola penulisan** menjadi file pedoman `.md` terstruktur plus berkas template placeholder `template-<NAMA_MATKUL>.tex`. Hasilnya dipakai `make-laprak` sebagai aturan formatting.
+
+**Sejak v0.3.0:** contoh laporan dibaca dari **`<folder kerja>/_contoh/`**, sedangkan hasil ditulis ke folder **`matkul/` lokal di dalam skill** (yang sengaja di-gitignore agar gaya pribadi tidak pernah masuk repo publik). Kompatibel dengan Antigravity dan Hermes Agent.
 
 ## When to Use
 
@@ -27,9 +29,9 @@ Don't use for:
 
 ## Prerequisites
 
-- Akses ke folder `matkul/` di skill base directory (bukan folder kerja pengguna)
-- Minimal satu file `.tex` laporan riil di `matkul/<NAMA_MATKUL>/`
-- Izin menulis ke folder matkul tersebut
+- Folder kerja pertemuan yang sedang dipakai user, berisi **`_contoh/`** dengan minimal satu file `.tex` laporan riil yang sudah disetujui.
+- Akses menulis ke folder **`matkul/` di skill base directory** (milik lokal user, diabaikan Git).
+- Jika `_contoh/` kosong atau tidak ada: **WAJIB** minta user menyediakan minimal 1 `.tex` contoh. Jangan mengarang pola dari matkul lain, dan jangan membaca `matkul/` sebagai sumber contoh.
 
 ## How to Run
 
@@ -37,34 +39,35 @@ Don't use for:
 
 | Antigravity | Hermes Agent | Kegunaan |
 |---|---|---|
-| `list_dir` | `search_files(target='files')` | Menemukan sub-folder matkul & file |
+| `list_dir` | `search_files(target='files')` | Menemukan `_contoh/` di folder kerja & sub-folder matkul |
 | `view_file` | `read_file` | Membaca file `.tex`/`.md` |
-| `write_to_file` | `write_file` / `execute_code` | Menulis `.md` dan `template-*.tex` |
+| `write_to_file` | `write_file` / `execute_code` | Menulis `.md` dan `template-*.tex` ke `matkul/` lokal |
 
 **Menemukan folder referensi:**
-1. AGY: cari entri skill `make-laprak` di Available skills, derive folder `matkul/` dari path SKILL.md-nya.
-2. Hermes: resolve dari skill base directory (`~/.hermes/skills/<category>/make-laprak/matkul/`).
-3. Gunakan path penuh di AGY; path skill-relatif yang di-resolve di Hermes.
+1. Tanyakan/path-kan folder kerja user yang sedang aktif (mis. `D:\Tugas\KEPL\UTS\`). Jika tidak disebut, minta konfirmasi — jangan menebak.
+2. **Input:** `<folder kerja>/_contoh/*.tex`. Di AGY gunakan path penuh; di Hermes resolve path absolut.
+3. **Output:** `matkul/<NAMA_MATKUL>/` di dalam base directory skill `make-laprak` (AGY: derive dari path SKILL.md; Hermes: `~/.hermes/skills/<category>/make-laprak/matkul/`). Folder ini lokal dan tidak dipush.
+4. Jangan pernah menulis hasil breakdown ke `<folder kerja>/_contoh/` — folder itu hanya untuk input contoh.
 
 ## Quick Reference
 
-| Langkah | Fokus | Output |
-|---------|-------|--------|
-| 1 — Identifikasi | Target matkul + list file | Daftar `.tex`/`.md` |
+| Langkah | Fokus | Input / Output |
+|---------|-------|----------------|
+| 1 — Identifikasi | Target matkul + list file | Input: `_contoh/*.tex`; Output: daftar `.tex`/`.md` |
 | 2 — Analisis | Struktur, gambar, sitasi, konvensi, evolusi | Catatan pola |
 | 3 — Susun | File `.md` + `template-<NAMA>.tex` | Draf dokumen |
-| 4 — Tulis | Simpan ke folder matkul | File fisik + ringkasan |
+| 4 — Tulis | Simpan ke `matkul/<NAMA>/` (lokal) | File fisik + ringkasan |
 
 ## Procedure
 
 1. **Identifikasi Target**
    - Tanyakan matkul yang ingin di-breakdown (mis. "KEPL").
-   - Temukan folder matkul tersebut; list semua file `.tex` dan `.md`.
-   - Jika sudah ada `.md`, baca dan pahami isinya terlebih dahulu.
-   - Selesai ketika: target dan berkas referensi teridentifikasi.
+   - Resolve folder kerja user, lalu list semua `.tex` di `<folder kerja>/_contoh/`. Jika kosong/tidak ada → minta user menyediakan minimal 1 `.tex`; **jangan lanjut** dengan menebak atau memakai `matkul/` sebagai pengganti.
+   - Cek juga `matkul/<NAMA_MATKUL>/` (lokal): jika sudah ada `.md`, baca dan pahami isinya terlebih dahulu untuk pembaruan kumulatif.
+   - Selesai ketika: target, berkas referensi di `_contoh/`, dan tujuan output teridentifikasi.
 
-2. **Analisis Semua `.tex` Laporan Riil**
-   - Baca **setiap** file `.tex` contoh (abaikan `template-*.tex` agar fokus pada dokumen riil).
+2. **Analisis Semua `.tex` Laporan Riil di `_contoh/`**
+   - Baca **setiap** file `.tex` contoh di `_contoh/` (abaikan `template-*.tex` agar fokus pada dokumen riil).
    - Untuk masing-masing, catat:
      - **A. Struktur Dokumen:** hierarki bab/section/subsection; `\clearpage` antar section; section khusus; preamble/cover sendiri (PPD) vs langsung `\chapter` (KEPL/PPG); ada/tidaknya Dasar Teori & Kesimpulan.
      - **B. Tata Letak Gambar:** `\begin{figure}[H]`?; semua variasi `width=...`; posisi penjelasan (sebelum gambar = Gaya C KEPL, atau di bawah dengan `Penjelasan Gambar :` = PPD/PPG); gambar gabungan dalam satu figure + `\vspace`; side-by-side dengan `\minipage`.
@@ -79,9 +82,10 @@ Don't use for:
    - Selesai ketika: kedua dokumen memiliki struktur sesuai format.
 
 4. **Tulis File & Konfirmasi**
-   - **LANGSUNG** tulis `.md` dan `template-<NAMA_MATKUL>.tex` ke folder matkul via `write_file` (Hermes) atau `write_to_file` (AGY).
+   - **LANGSUNG** tulis `.md` dan `template-<NAMA_MATKUL>.tex` ke `matkul/<NAMA_MATKUL>/` di skill base directory (folder lokal user) via `write_file` (Hermes) atau `write_to_file` (AGY).
+   - **Jangan** menyalin laporan riil dari `_contoh/` ke dalam repo/plugin. Hanya template placeholder yang boleh dihasilkan.
    - Tampilkan ringkasan perubahan.
-   - Tanya: *"Pedoman dan template matkul sudah diperbarui. Ada yang perlu direvisi?"*
+   - Tanya: *"Pedoman dan template matkul sudah diperbarui di folder lokal Anda. Ada yang perlu direvisi?"*
    - Selesai ketika: file fisik ada di disk dan ringkasan disampaikan.
 
 ## Pitfalls
@@ -90,17 +94,20 @@ Don't use for:
 - **JANGAN MENGARANG ATURAN:** setiap aturan harus dibuktikan dari minimal satu `.tex`. Jika ragu, tandai `(perlu konfirmasi)`.
 - **KUMULATIF, BUKAN TIMPA:** jika `.md` sudah ada, baca dulu; perbarui/perkaya, jangan hapus aturan yang benar.
 - **PRIORITASKAN `.TEX` TERBARU:** nomor tertinggi = paling mutakhir, jadi rekomendasi utama.
-- **KEBERSIHAN PRIVASI:** buat/perbarui `template-<NAMA_MATKUL>.tex` berisi placeholder agar laporan riil bisa dihapus dari repo.
-- Jangan mengabaikan `template-*.tex` saat menganalisis — itu bukan dokumen riil.
+- **KEBERSIHAN PRIVASI:** baca contoh hanya dari `_contoh/`; tulis hanya template placeholder ke `matkul/` lokal. Laporan riil tidak pernah masuk repo.
+- Abaikan `template-*.tex` saat menganalisis — itu hanya placeholder hasil skill, bukan dokumen riil.
 - Jangan menulis laporan untuk penugasan pengguna; skill ini hanya menghasilkan pedoman + template.
+- **JANGAN MENGAMBIL INISIATIF FINAL:** hasil breakdown adalah draf gaya; user tetap mengonfirmasi sebelum dipakai `make-laprak`.
 
 ## Verification
 
+- Sumber contoh adalah `<folder kerja>/_contoh/*.tex`, bukan `matkul/`.
 - File `.md` mengikuti 8 bagian FORMAT OUTPUT di bawah.
 - `template-<NAMA_MATKUL>.tex` berisi placeholder, bukan data laporan riil.
 - Setiap aturan di `.md` memiliki bukti dari minimal satu `.tex` referensi.
 - Aturan lama yang benar tidak hilang (kumulatif).
 - Gaya terbaru menjadi rekomendasi utama bila ada konflik.
+- File hasil ada di `matkul/<NAMA>/` (lokal) dan **tidak** muncul di `git status` repo publik.
 
 ## FORMAT OUTPUT (.md)
 

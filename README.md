@@ -1,41 +1,49 @@
-# MyLaprak - Antigravity Plugin
+# MyLaprak — Antigravity / Hermes Skill Plugin
 
-Repositori ini adalah **Plugin Antigravity** yang menyediakan _Skill_ AI khusus untuk menyusun Laporan Praktikum tingkat Universitas secara interaktif, terstruktur, analitis, dan siap pakai dalam format LaTeX.
+Repositori ini menyediakan _Skill_ AI untuk menyusun **Laporan Praktikum universitas** secara interaktif, terstruktur, analitis, dan siap pakai dalam format **LaTeX**. Versi **v0.4.0** memperkenalkan **skill ICG di-vendor** (Renaming + ContextGenerate) serta **dukungan alur penuh bersama ImageContext-Generator (ICG)**. Fitur v0.3.0 yang dibawa ke depan: folder kerja `_contoh/`, parser `inisiasi.txt` dual-mode (enriched + legacy), gaya matkul **lokal milik user**, sistem template Universal.
 
 ---
 
-## 🌟 Fitur Unggulan (Rilis V1)
+## 🌟 Fitur Unggulan (v0.4.0)
 
-- 🌐 **Dukungan Dual-Mode:**
-  - **Mode Matkul Terdaftar:** Menggunakan aturan penulisan dan template spesifik mata kuliah (`KEPL`, `PPD`, `PPG`).
-  - **Mode Universal (General Fallback):** Mampu menyusun laporan untuk mata kuliah praktikum **apa pun** secara instan menggunakan basis `template-general/` dengan panduan `general.md`.
-- 🛡️ **Privacy-Safe Architecture:** Menggunakan template acuan monolitik ber-placeholder (`template-[MATKUL].tex`) tanpa mengekspos data pribadi mahasiswa di repositori publik.
-- 📖 **Peta Kerja Otomatis:** Membaca catatan alur kerja di `inisiasi.txt` dan mencocokkannya dengan screenshot bernomor di folder `gambar/`.
-- 🔍 **Sitasi Ilmiah Nyata:** AI mencari dan memvalidasi sumber referensi asli (buku, jurnal IEEE ber-DOI, modul dosen) tanpa halusinasi sitasi.
-- ⚡ **Auto-Generate Berkas Fisik `.tex`:** Langsung menghasilkan berkas `.tex` siap kompilasi di folder kerja pengguna pada tahap finalisasi.
+- 🧩 **ICG Skills di-Vendor (BARU v0.4.0):**
+  - **`/icg-renaming`** — membersihkan, mengurutkan, dan menamai screenshot mengikuti struktur modul (PDF/PPTX) → `gambar/` (`1.png`, `1a.png`, `T1.png`, …). Dedup hash + perceptual hash, ACC gate sebelum write.
+  - **`/icg-contextgenerate`** — dua-pass (visual census → enriched context) menghasilkan `inisiasi.txt` enriched dengan `[@section]`, `type=`, `group=`, `Konteks:`, `Arah:`. Auto-save/resume via `.icg_cache`, ACC gate pending→final.
+  - Engine Python **self-contained** di `skills/ICG-Renaming/scripts/` dan `skills/ICG-ContextGenerate/scripts/`. Sumber pengembangan tetap di repo ICG (lihat `VENDOR.md` tiap skill).
+  - Kompatibel penuh dengan `inisiasi.txt` legacy (free-form) — backward compat dijamin.
+
+- 🌐 **Dual-Mode yang Jujur:**
+  - **Mode A — Gaya Matkul Lokal:** Pedoman `matkul/<NAMA>/` **dibuat dan disimpan di mesin Anda** lewat `/breakdown-matkul`. Folder ini sengaja **kosong di repo publik** (hanya `.gitkeep` + README) agar tidak ada gaya/data pribadi yang ikut ter-clone.
+  - **Mode B — General Fallback:** Selalu tersedia via `template-general/` (`general.md` + `template-master.tex` + komponen pecahan). Clone bersih = Mode B langsung pakai.
+- 📖 **Parser `inisiasi.txt` Dual-Mode:**
+  - **Enriched:** `[@section] S<n> | <judul>` + `N.png | S<n> | type=<...> | group=<single|pair:M> | <Label> | Konteks: ... | Arah: ...`
+  - **Legacy:** `N.png | Label | Konteks | Arah` (dan catatan bebas per baris) — **tetap didukung penuh**.
+  - Deteksi otomatis, validasi simetri `group=pair:M`, dukungan nama file `N.png`, `Na.png`, `TN.png`, `TN-Na.png`.
+- 📏 **Width dari `type`:** Lebar gambar diambil dari tabel `type`→width di `general.md` (atau override `matkul/<NAMA>.md`). Tidak lagi angka bebas yang tidak konsisten.
+- 🛡️ **Privacy-Safe Architecture:** Tidak ada laporan riil di repo. Contoh masuk `_contoh/` (folder kerja user), hasil breakdown masuk `matkul/` lokal yang di-gitignore.
+- 🔍 **Sitasi Nyata + ICG:** Verifikasi referensi via modul/web; jika skill ICG tersedia (F4 vendor), sitasi `ICG:xxx` (kode) dan `ICG:ctx:xxx` (konteks) dikenali.
+- ⚡ **Auto-Generate `.tex`:** Langsung menulis berkas `.tex` fisik di folder kerja Anda pada tahap finalisasi.
 
 ---
 
 ## 📦 Cara Instalasi Plugin
 
-Pilih salah satu cara instalasi berikut:
+### Opsi A — GitHub Releases (paling mudah)
+1. Buka tab **[Releases](https://github.com/AcademyCity-RND/MyLaprak/releases)**.
+2. Unduh bundle `MyLaprak-vX.X.X.zip` terbaru.
+3. Ekstrak ke direktori plugin: `~/.gemini/config/plugins/make-laprak` (Antigravity) atau folder skills Hermes Anda.
 
-### Opsi A — Download via GitHub Releases (Paling Mudah)
-1. Buka tab **[Releases](https://github.com/AcademyCity-RND/MyLaprak/releases)** di repositori ini.
-2. Unduh berkas bundle rilis terbaru (`MyLaprak-vX.X.X.zip`).
-3. Ekstrak isi berkas zip langsung ke direktori plugin Antigravity Anda (`~/.gemini/config/plugins/make-laprak`).
-
-### Opsi B — Kloning Repositori (Git Clone)
-**Instalasi Global (berlaku untuk semua workspace):**
+### Opsi B — Git Clone
 ```bash
+# Global
 git clone https://github.com/AcademyCity-RND/MyLaprak.git ~/.gemini/config/plugins/make-laprak
-```
 
-**Instalasi Lokal (per workspace proyek):**
-```bash
+# Per-workspace
 mkdir -p .agents/plugins/
 git clone https://github.com/AcademyCity-RND/MyLaprak.git .agents/plugins/make-laprak
 ```
+
+> Clone bersih hanya berisi `template-general/` dan `matkul/.gitkeep` + README. Itu **disengaja**.
 
 ---
 
@@ -44,98 +52,156 @@ git clone https://github.com/AcademyCity-RND/MyLaprak.git .agents/plugins/make-l
 ```text
 MyLaprak/
 ├── .github/
-│   ├── release.yml                          # Konfigurasi Auto-Changelog rilis
-│   └── workflows/
-│       └── release.yml                      # CI/CD otomatisasi rilis & bundle zip
-├── plugin.json                              # Manifest metadata plugin Antigravity
-├── README.md                                # Dokumentasi utama repositori
-├── CONTRIBUTING.md                          # Panduan berkontribusi
-├── scripts/                                 # Skrip utilitas pengembang
+│   ├── release.yml                       # Auto-Changelog rilis
+│   └── workflows/release.yml             # Build bundle zip + release
+├── plugin.json                           # Manifest plugin
+├── README.md                             # Dokumentasi utama (ini)
+├── CONTRIBUTING.md                       # Panduan kontribusi
+├── CHANGELOG.md                          # Riwayat versi (v0.4.0)
+├── scripts/                              # Skrip utilitas pengembang
 └── skills/
-    ├── make-laprak/                         # Skill utama — penyusun laporan
-    │   ├── SKILL.md                         # Prompt instruksi alur kerja (Workflow)
-    │   ├── matkul/                          # Koleksi pedoman & template per matkul
-    │   │   ├── KEPL/                        # Konstruksi & Evolusi Perangkat Lunak
-    │   │   │   ├── KEPL.md                  # Pedoman penulisan & gaya naratif
-    │   │   │   └── template-KEPL.tex        # Template monolitik acuan KEPL
-    │   │   ├── PPD/                         # Praktikum Penambangan Data
-    │   │   │   ├── PPD.md                   # Pedoman penulisan, formula & grafik
-    │   │   │   └── template-PPD.tex         # Template monolitik acuan PPD (Cover UGM)
-    │   │   └── PPG/                         # Pemrograman Permainan (Game)
-    │   │       ├── PPG.md                   # Pedoman format khusus tanpa Teori/Kesimpulan
-    │   │       └── template-PPG.tex         # Template monolitik acuan PPG
-    │   └── template-general/                # Sistem Template Universal (Fallback)
-    │       ├── general.md                   # Pedoman umum untuk matkul baru
-    │       ├── template-master.tex          # Master template monolitik universal
+    ├── make-laprak/
+    │   ├── SKILL.md                      # Alur 5 tahap + parser enriched/legacy
+    │   ├── matkul/                       # LOKAL USER — di-gitignore
+    │   │   ├── .gitkeep                 # Penanda folder tetap ada di clone
+    │   │   ├── README.md                # Cara membuat gaya sendiri
+    │   │   └── <NAMA>/                  # Hasil /breakdown-matkul user
+    │   │       ├── <NAMA>.md            # Pedoman formatting
+    │   │       └── template-<NAMA>.tex  # Template placeholder
+    │   └── template-general/            # Fallback universal (selalu ada)
+    │       ├── general.md               # Pedoman + tabel type→width
+    │       ├── template-master.tex
     │       ├── template-dependencies-dan-style.tex
     │       ├── template-tujuanpraktikum.tex
     │       ├── template-dasarteori.tex
     │       ├── template-hasilpembahasan.tex
     │       ├── template-kesimpulan.tex
     │       └── template-daftarpustaka.tex
-    ├── breakdown-matkul/                    # Skill ekstraksi .tex contoh → .md & template
-    │   └── SKILL.md
-    └── make-laprak-info/                    # Skill bantuan & panduan cepat
-        └── SKILL.md
+    ├── breakdown-matkul/
+    │   └── SKILL.md                      # _contoh/*.tex → matkul/<NAMA>/ (lokal)
+    ├── make-laprak-info/
+    │   └── SKILL.md                      # Panduan verbatim (v0.4.0)
+    ├── ICG-Renaming/                     # BARU v0.4.0 (vendored dari ICG)
+    │   ├── SKILL.md
+    │   └── scripts/                      # Engine Python self-contained
+    │       ├── src/                      # 7 modul: renaming_engine, vision_engine, security, ...
+    │       ├── requirements.txt
+    │       └── VENDOR.md                 # Provenance + sync procedure
+    └── ICG-ContextGenerate/              # BARU v0.4.0 (vendored dari ICG)
+        ├── SKILL.md
+        └── scripts/                      # Engine Python self-contained
+            ├── src/                      # 7 modul: context_engine, vision_engine, security, ...
+            ├── requirements.txt
+            └── VENDOR.md                 # Provenance + sync procedure
 ```
+
+---
+
+## 🔗 Alur Penuh 4 Skill (dengan ICG — **sudah di-vendor v0.4.0**)
+
+```text
+Screenshot mentah
+   │
+   ├─(1) /icg-renaming ──────────► gambar/ bernomor rapi (1.png, 2.png, T1.png, ...)
+   │
+   ├─(2) /icg-contextgenerate ───► inisiasi.txt ENRICHED
+   │                                ([@section] + type/group/Konteks/Arah)
+   │
+   ├─(3) /breakdown-matkul ──────► matkul/<NAMA>/ (LOKAL, dari _contoh/*.tex)
+   │
+   └─(4) /make-laprak ───────────► Laporan.tex siap kompilasi
+```
+
+Skill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/ICG-Renaming/scripts/` dan `skills/ICG-ContextGenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.
+
+Repositori ICG: [github.com/AcademyCity-RND/ImageContext-Generator](https://github.com/AcademyCity-RND/ImageContext-Generator)
 
 ---
 
 ## 🚀 Cara Menggunakan
 
-> **PENTING:** Anda **TIDAK PERLU** menaruh file tugas di dalam folder plugin ini. Plugin bertindak sebagai "otak" di latar belakang.
+> **PENTING:** Anda **TIDAK PERLU** menaruh file tugas di dalam folder plugin.
 
 ### Langkah 1 — Siapkan Folder Kerja
-Buat folder kerja pertemuan **di mana saja** (misal: `D:\Tugas\PPD\Pertemuan-5\` atau `D:\Tugas\JaringanKomputer\Pertemuan-1\`).
+Buat folder kerja pertemuan di mana saja, mis. `D:\Tugas\PPD\Pertemuan-5\`.
 
 ### Langkah 2 — Isi Folder Kerja
-Di dalam folder kerja tersebut, siapkan:
-- `inisiasi.txt` — Catatan/peta penjelasan Anda tentang setiap screenshot langkah praktikum.
-- Folder `gambar/` — Screenshot bernomor (misal: `1.png`, `2.png`, `T1.png`, dst).
-- (Opsional) Berkas modul praktikum (PDF/PPT/Word) pertemuan terkait.
+- `inisiasi.txt` — enriched **atau** legacy (lihat §Format Inisiasi).
+- `gambar/` — screenshot bernomor (`1.png`, `2.png`, `T1.png`, `Na.png`, `TN-Na.png`, ...).
+- `_contoh/` — **minimal satu** `.tex` laporan yang sudah disetujui & dianonimkan (dipakai `/breakdown-matkul`).
+- (Opsional) modul praktikum (PDF/PPT).
 
 ### Langkah 3 — Panggil AI
-Buka workspace di folder kerja tersebut, lalu jalankan perintah di chat:
 ```text
-/make-laprak buatkan laporan [NAMA_MATKUL], saya sudah siapkan inisiasi.txt dan folder gambar
+/make-laprak buatkan laporan [NAMA_MATKUL], saya sudah siapkan inisiasi.txt, gambar/, dan _contoh/
 ```
-*(Jika mata kuliah belum terdaftar di `matkul/`, AI akan otomatis menggunakan template universal dan menanyakan identitas Anda di awal).*
+Jika `matkul/<NAMA>/` belum ada → Mode B, AI menanyakan identitas (Nama, NIM, Kelas, Dosen, Topik) di Tahap 1.
 
-### Langkah 4 — Ikuti Alur Kerja 5 Tahap
-AI bekerja secara iteratif dan selalu meminta persetujuan (ACC) Anda sebelum berpindah tahap:
-1. **Tahap 1 — Inisiasi:** AI membaca referensi/template dan merangkum pemahaman (serta konfirmasi identitas jika mode universal).
-2. **Tahap 2 — Outline:** AI menyusun kerangka bab dan sub-seksi laporan.
-3. **Tahap 3a — Hasil dan Pembahasan:** AI menyusun draf pembahasan berdasarkan screenshot.
-4. **Tahap 3b — Dasar Teori:** AI menyusun dasar teori relevan, formulasi matematis, dan diagram konsep.
-5. **Tahap 4 — Finalisasi:** AI menyusun Kesimpulan dan Daftar Pustaka, lalu **langsung membuat file fisik `.tex`** siap kompilasi di folder Anda.
+### Langkah 4 — Alur 5 Tahap (ACC setiap tahap)
+1. **Inisiasi** — baca pedoman + parsing `inisiasi.txt`, validasi pair, rangkum.
+2. **Outline** — dari `[@section]` (enriched) atau disusun dari nol (legacy).
+3. **3a Hasil & Pembahasan** — `group=pair` → Gaya B; `single` → Gaya C; width dari `type`.
+4. **3b Dasar Teori** — dilewati jika matkul tanpa teori.
+5. **4 Finalisasi** — Kesimpulan + Daftar Pustaka, lalu **langsung generate `.tex`**.
 
 ---
 
-## 🎨 Menambahkan Mata Kuliah Baru Secara Permanen
+## 📝 Format `inisiasi.txt`
 
-Jika Anda memiliki mata kuliah baru dengan gaya penulisan khusus dan ingin menjadikannya standar permanen:
-1. Buat folder baru di `skills/make-laprak/matkul/<NAMA_MATKUL>/`.
-2. Letakkan file contoh laporan `.tex` di folder tersebut.
-3. Jalankan perintah `/breakdown-matkul`. AI akan otomatis mengekstrak pola menjadi `<NAMA_MATKUL>.md` dan membuatkan `template-<NAMA_MATKUL>.tex`.
+**Enriched (disarankan):**
+```text
+[@section] S1 | Pendahuluan
+1.png | S1 | type=code | group=single | Kode Utama | Konteks: ... | Arah: ...
+2.png | S1 | type=terminal | group=pair:3 | Output Program | Konteks: ... | Arah: ...
+3.png | S1 | type=gui | group=pair:2 | Grafik Hasil | Konteks: ... | Arah: ...
+# baris komentar diabaikan
+```
+
+**Legacy (kompatibel penuh):**
+```text
+1.png | Label Gambar | Konteks penjelasan | Arah analisis
+2.png | Output Program | Konteks ... | Arah ...
+```
+
+| Field | Arti |
+|-------|------|
+| `S<n>` | ID section dari header `[@section]` |
+| `type` | Dipetakan ke lebar gambar di tabel `general.md` — 6 nilai kanonik V7: `config`, `code`, `terminal`, `gui`, `diagram`, `log` |
+| `group=single` | Gaya C — 1 gambar per `figure` |
+| `group=pair:M` | Gaya B — 2 gambar + `\vspace`; **simetri wajib** |
+| `Konteks` / `Arah` | Bahan narasi analitis, bukan sekadar caption |
+
+---
+
+## 🎨 Membuat Gaya Matkul Sendiri (Mode A)
+
+1. Taruh laporan contoh yang sudah dianonimkan di `_contoh/`.
+2. Jalankan `/breakdown-matkul` → hasil ditulis ke `skills/make-laprak/matkul/<NAMA>/` **di mesin Anda**.
+3. Panggil `/make-laprak` → gaya lokal dipakai otomatis.
+
+Folder `matkul/` diabaikan Git. Jangan pernah commit laporan riil. Ingin berbagi? Bagikan `_contoh/` yang dianonimkan lewat issue/PR, lalu orang lain menjalankan `/breakdown-matkul` sendiri.
 
 ---
 
 ## 👥 Kontributor (Co-Author) Otomatis
 
-Untuk memastikan kontribusi Anda tercatat rapi:
-- **Windows:** Jalankan `scripts/setup-contributor.bat`
-- **Linux/Mac:** Jalankan `bash scripts/setup-contributor.sh`
+- **Windows:** `scripts/setup-contributor.bat`
+- **Linux/Mac:** `bash scripts/setup-contributor.sh`
 
 ## ℹ️ Bantuan Cepat
-Ketik `/make-laprak-info` di chat Antigravity untuk melihat panduan penggunaan langsung.
+Ketik `/make-laprak-info` untuk panduan verbatim v0.4.0.
 
 ---
 
-## 🗺️ Roadmap Proyek
+## 🗺️ Roadmap
 
-- [x] Sistem Template Universal (`template-general/`) untuk segala matkul
-- [x] Template monolitik acuan aman privasi (`template-KEPL`, `template-PPD`, `template-PPG`)
-- [x] Otomatisasi GitHub Releases & Auto-Changelog via GitHub Actions
+- [x] Sistem Template Universal (`template-general/`)
+- [x] Template monolitik aman privasi
+- [x] Otomatisasi GitHub Releases
+- [x] **v0.3.0 — `matkul/` lokal + `_contoh/` + parser enriched/legacy + `type`→width + docs**
+- [x] **F4 — vendor skill ICG (Renaming + ContextGenerate) ke repo ini** ✅
 - [ ] Cross-Platform Adapters (`.cursorrules`, `CLAUDE.md`, `.github/copilot-instructions.md`)
-- [ ] Fallback Script Pencari Jurnal Ilmiah Otomatis (`scripts/search_jurnal.py`)
-- [ ] Integrasi MCP server untuk pencarian pustaka akademik
+- [ ] Fallback script pencari jurnal (`scripts/search_jurnal.py`)
+- [ ] Integrasi MCP pencarian pustaka akademik
+
+Lihat [CHANGELOG.md](CHANGELOG.md) untuk rincian perubahan versi.

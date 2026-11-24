@@ -229,6 +229,23 @@ Penjelasan Gambar :
 
 ---
 
+### Mapping `type` (ICG) → Lebar Gambar (MyLaprak)
+
+> **Kontrak:** ICG **hanya mengirim field `type`** di `inisiasi.txt` (nilai: `config`, `code`, `terminal`, `gui`, `diagram`, `log`). MyLaprak (pedoman matkul: `general.md`, `KEPL.md`, `PPG.md`, dll) yang menentukan `width` final dari tabel di bawah. ICG **tidak** menulis `width=` di output.
+
+| `type` (ICG) | Kategori Visual | Contoh Konten | Lebar Default (`general.md`) | Catatan |
+|---|---|---|---|---|
+| `config` | Kode konfigurasi / file ringkas | `Dockerfile`, `docker-compose.yml`, `.env`, `package.json` | `0.55\textwidth` | Sama dengan "Kode Ringkas" |
+| `code` | Kode program / pipeline penuh | Source code Laravel/Vue, script Python, full pipeline CI | `0.75\textwidth` | Sama dengan "Kode Kompleks / Full Pipeline" |
+| `terminal` | Output terminal / CLI / log ringkas | `docker build` output, `pytest` result, `git log` | `0.35\textwidth` | Sama dengan "Output Ramping / Log Terminal" |
+| `log` | Log terstruktur / output verbose | Structured log JSON, Laravel log, Docker daemon log | `0.35\textwidth` | Sama dengan terminal; bisa diperlebar ke `0.45\textwidth` jika tabel |
+| `gui` | Tampilan GUI / Dashboard / Browser | Docker Desktop, Railway/Render dashboard, Postman, VS Code | `0.65\textwidth` | Sejenis "Plot Distribusi / Grafik Standar" — area visual lebar |
+| `diagram` | Diagram arsitektur / konsep / ERD | Diagram arsitektur microservice, ERD, flowchart, sequence diagram | `0.60\textwidth` | Sama dengan "Diagram Konsep Dasar Teori" |
+
+> **Catatan untuk Style Matkul Khusus (KEPL/PPD/PPG):** Tabel di atas adalah **default universal** (`general.md`). Pedoman matkul khusus (`KEPL.md`, `PPD.md`, `PPG.md`) **boleh menimpa (override)** lebar untuk `type` tertentu sesuai gaya penulisan matkul tersebut. ICG tetap hanya kirim `type`; MyLaprak lookup ke pedoman matkul aktif.
+
+---
+
 ## 4. Konvensi Penamaan Berkas Gambar & Label
 
 1. **Hasil Praktikum:**
