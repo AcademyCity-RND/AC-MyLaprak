@@ -10,6 +10,38 @@ category: software-development
 
 This skill covers the **ImageContext-Generator ContextGenerate Engine (F2)** — a two-pass pipeline that transforms lab screenshots into an enriched `inisiasi.txt` with narrative structure, per-image typing, grouping, and section mapping.
 
+## Agent Pre-flight (WAJIB — sebelum menjalankan engine)
+
+Saat user memberi folder sumber + klaim (mis. "modul chapter 11 Flask"), jangan
+langsung generate dan jangan mengaudit bebas. Urutannya:
+
+1. **Konfirmasi klaim user ke modul, bukan ke tebakan.**
+   - Baca PDF/PPTX di folder sumber; cari heading pertemuan/section + nomor halaman.
+   - Laporkan faktanya singkat: mis. "Flask ada di Pertemuan 10 (hlm 210–223);
+     Pertemuan 11 = Streamlit".
+   - **Jangan batalkan tugas** karena nomor bab berbeda dari kata user. Tugas
+     ditentukan oleh folder/tugas yang user berikan, bukan penomoran modul.
+2. **Petakan screenshot ke section laporan.** Konvensi yang berlaku (contoh PPD-11):
+   - nama tanpa prefix `T` → **Hasil Praktikum**
+   - nama dengan prefix `T` (`T1`, `T3-a`, `T8-c`) → **Tugas Praktikum**
+   - Keduanya masuk **satu** `inisiasi.txt`; jangan menyingkirkan salah satunya.
+3. **Klaim isi screenshot harus dari gambar (vision), bukan dari nama file.**
+   Jangan mengarang isi proyek/file yang tidak terlihat di screenshot.
+4. **`gambar/` atau `inisiasi.txt` yang belum ada = kondisi saat ini, bukan blocker.**
+   Sumber = folder yang user berikan. `gambar/` hanya output opsional F1. Jangan
+   meminta konsolidasi/renumber sebelum generate kecuali user memintanya.
+5. **Tanya ACC pengerjaan sebelum Pass 1.** Ringkas: file output, section, jumlah
+   gambar, dan apa yang belum ada. Lalu berhenti dan tunggu jawaban user.
+6. **Format nama saat F1 dijalankan:** pertahankan suffix manual (`7a`, `8b`,
+   `T3-a`) apa adanya; urutan kanonik `1, 1a, 1b, …, T1, T1-a, …`; jangan
+   renumber lintas section.
+
+**Anti-pattern yang harus dihindari:** menyimpulkan screenshot "bukan tugas ini"
+hanya dari nama file; menyebut file/proyek yang tidak ada di folder; menolak
+generate karena `gambar/` kosong; atau menjalankan Pass 1 sebelum ACC.
+
+---
+
 ## Pipeline Overview
 
 ```
@@ -303,6 +335,10 @@ Test coverage:
 | Invalid type poisoning output | `_parse_pass2_line` falls back to `config` |
 | Pair asymmetry in Pass 1 | `[PAIR] a:b` → add both `a→b` and `b→a` in `pairs` dict |
 | Legacy inisiasi.txt broken | `parse_inisiasi` dual-mode; never changes format detection |
+| Langsung generate tanpa konfirmasi klaim user | Ikuti Agent Pre-flight langkah 1–5 |
+| Screenshot non-T dianggap "bukan tugas" | non-T = Hasil Praktikum, T = Tugas Praktikum (satu dokumen) |
+| `gambar/` kosong dijadikan blocker | `gambar/` opsional; sumber = folder user |
+| Mengarang isi screenshot dari nama file | Buka gambar via vision sebelum mengklaim |
 
 ---
 
