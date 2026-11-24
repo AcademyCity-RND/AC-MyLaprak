@@ -1,0 +1,18 @@
+# Core Dependencies
+pyyaml>=6.0.1
+Pillow>=10.2.0
+python-dotenv>=1.0.1
+
+# Reference Parsing (PDF step extraction / PPTX slide titles)
+PyMuPDF>=1.23        # module `fitz` — imported by knowledge_manager.py + renaming_engine.py
+python-pptx>=0.6     # module `pptx` — imported by renaming_engine.py
+
+# CLI & UI
+typer[all]>=0.9.0
+rich>=13.7.0
+
+# AI Provider - Google Gemini (Recommended Free Vision Tier)
+google-generativeai>=0.4.0
+
+# AI Provider - OpenAI (Optional / Fallback)
+openai>=1.12.0
